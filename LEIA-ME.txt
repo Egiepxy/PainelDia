@@ -1,0 +1,32 @@
+ESTRUTURA EGI V1.3
+==================
+
+Regra principal:
+VERSÃO MUDA; NOME OFICIAL NÃO MUDA.
+
+Arquivos oficiais:
+- btc.html              = BTC_Padrao Multiativo V8.9.4
+- index.html            = Central EGI
+- inicio-dia.html       = Painel Início do Dia V1.1
+- manada.html           = Radar Manada V2.2
+- volatilidade.html     = Radar Volatilidade V2.3
+- confluencia.html      = Radar Confluência V4.5
+- setupdt.html          = SetupDT V1.9.20
+- kdj.html              = Radar KDJ V5.3
+- virada-fluxo.html     = Radar Virada de Fluxo V3.8
+- proximas-fortes.html  = Radar Próximas Fortes V10.5
+- apps.json             = cadastro central
+- versions/             = versões originais recebidas
+
+PENDENTE:
+- Nenhum app obrigatório da rotina principal.
+
+NO NOTEBOOK:
+1. Extraia esta pasta, por exemplo, em C:\MeusProj26\EGI\
+2. Abra index.html.
+3. Mantenha todos os arquivos oficiais na mesma pasta.
+4. Quando aprovar uma nova versão, substitua o arquivo oficial fixo e arquive a versão numerada em versions/.
+
+NO CELULAR:
+Para funcionamento mais confiável, publique esta mesma estrutura em Render/GitHub.
+Android pode restringir links relativos quando os arquivos são abertos diretamente via content://Downloads.

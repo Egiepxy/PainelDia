@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08111f">
+<title>Radar Manada EGI V2.2 — Manada + Validação SetupDT</title>
+<style>
+:root{--bg:#07101d;--card:#101b2c;--card2:#132338;--line:#263c59;--txt:#edf6ff;--muted:#9bb0c8;--green:#29d391;--red:#ff6278;--yellow:#ffd166;--blue:#59a5ff;--orange:#ff9f43}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07101d,#0b1524 40%,#07101d);color:var(--txt);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1280px;margin:auto;padding:14px}header{background:linear-gradient(135deg,#102441,#122035);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 12px 30px #0005}
+h1{font-size:clamp(24px,5vw,40px);margin:0 0 4px}.sub{color:var(--muted);font-size:14px}.grid{display:grid;gap:10px}.metrics{grid-template-columns:repeat(6,minmax(120px,1fr));margin-top:14px}
+.metric,.panel{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px}.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:19px;margin-top:3px}
+.panel{margin-top:10px}.panel h2{font-size:18px;margin:0 0 9px}.controls{display:grid;grid-template-columns:repeat(6,minmax(120px,1fr));gap:8px}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}select,button,textarea{font:inherit;border-radius:10px;border:1px solid #38516f;background:#0b1727;color:var(--txt);padding:10px}
+button{cursor:pointer;font-weight:750}button.primary{background:#1976d2;border-color:#3b92ec}button.good{background:#167a58;border-color:#2fb782}button.secondary{background:#172940}
+.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.notice{border-radius:12px;padding:10px 12px;margin-top:9px;background:#172338;border:1px solid var(--line);color:#dcecff}.notice.warn{border-color:#7a5b20;background:#2c2516}.notice.ok{border-color:#22684e;background:#123528}
+.progress{height:8px;background:#0a1320;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,#59a5ff,#29d391);width:0%}
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:1180px;background:#0c1727}
+th,td{padding:9px 8px;border-bottom:1px solid #20344d;text-align:right;white-space:nowrap}th{position:sticky;top:0;background:#13233a;color:#bcd0e6;font-size:12px;z-index:1}
+td:first-child,th:first-child,td:nth-child(2),th:nth-child(2){text-align:left}.rank{font-weight:800}.sym{font-weight:850;font-size:16px}.score{font-weight:900}
+.green{color:var(--green)}.red{color:var(--red)}.yellow{color:var(--yellow)}.blue{color:var(--blue)}.orange{color:var(--orange)}
+.badge{display:inline-block;border-radius:99px;padding:3px 8px;border:1px solid #3a526e;background:#14263b;font-size:12px}.badge.hot{border-color:#2b7659;background:#14382c}.badge.warn{border-color:#8d6725;background:#332717}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px}.card strong{font-size:18px}.card p{margin:5px 0 0;color:var(--muted)}
+textarea{width:100%;min-height:260px;resize:vertical}.legend{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.legend div{background:#0b1828;border:1px solid #253b56;border-radius:12px;padding:10px}.legend b{display:block;margin-bottom:4px}
+
+.validationGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.vstat{background:#0b1828;border:1px solid #253b56;border-radius:12px;padding:10px}
+.vstat small{display:block;color:var(--muted);font-size:12px}.vstat strong{font-size:21px}
+.validationTable table{min-width:980px}
+.setupBox textarea{min-height:190px}
+@media(max-width:900px){.validationGrid{grid-template-columns:repeat(2,1fr)}}
+
+footer{color:var(--muted);font-size:12px;padding:16px 4px 28px}
+@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.legend{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="sub">EGI • PRESSÃO COMPRADORA REAL • BINANCE SPOT • SEM CHAVE DE API</div>
+  <h1>🐂 Radar Manada EGI V2.2 — Manada + Validação SetupDT</h1>
+  <div class="sub">Procura onde a compra está sendo executada agora, separa força da manada de qualidade da entrada e depois valida os candidatos com os sinais posteriores do SetupDT.</div>
+  <div class="grid metrics">
+    <div class="metric"><small>Janela da sessão</small><strong id="sessionLabel">—</strong></div>
+    <div class="metric"><small>Universo válido</small><strong id="universeCount">—</strong></div>
+    <div class="metric"><small>Maior pressão compradora</small><strong id="leader">—</strong></div>
+    <div class="metric"><small>BTC contexto</small><strong id="btcCtx">—</strong></div>
+    <div class="metric"><small>Próxima atualização</small><strong id="nextRefresh">Manual</strong></div>
+    <div class="metric"><small>Estado</small><strong id="state">Aguardando</strong></div>
+  </div>
+</header>
+
+<section class="panel">
+  <h2>🎯 Regra do radar</h2>
+  <div class="notice warn"><b>“Mais compradores” aqui não significa pessoas únicas.</b> A API pública não revela quantos indivíduos diferentes compraram. O radar mede <b>agressões de compra</b>, <b>volume taker buy</b>, aceleração, liquidez e book.</div>
+  <div class="legend" style="margin-top:9px">
+    <div><b>🚀 Manada entrando</b>Compra dominante + aceleração + ainda sem excesso.</div>
+    <div><b>🟢 Compradores dominando</b>Fluxo comprador consistente; confirmar no SetupDT.</div>
+    <div><b>⚠️ Manada lotada</b>Compra forte, mas preço/RSI esticados. Não perseguir.</div>
+    <div><b>🔴 Vendedores dominando</b>Taker buy abaixo de 50% ou pressão enfraquecendo.</div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>⚙️ Varredura</h2>
+  <div class="controls">
+    <div><label>Universo por volume 24h</label><select id="universe"><option>30</option><option selected>50</option><option>70</option></select></div>
+    <div><label>Liquidez mínima 24h</label><select id="minVol"><option value="3000000">US$ 3 mi</option><option value="5000000" selected>US$ 5 mi</option><option value="10000000">US$ 10 mi</option><option value="25000000">US$ 25 mi</option></select></div>
+    <div><label>Horizonte informativo</label><select id="horizon"><option value="6">Amanhã 06h</option><option value="9" selected>Amanhã 09h</option><option value="12">Amanhã 12h</option><option value="18">Amanhã 18h</option></select></div>
+    <div><label>Top final</label><select id="topn"><option>10</option><option selected>15</option><option>20</option></select></div>
+    <div><label>Autoatualizar</label><select id="auto"><option value="0">Desligado</option><option value="180">3 min</option><option value="300" selected>5 min</option><option value="600">10 min</option></select></div>
+    <div><label>BTC no ranking</label><select id="includeBtc"><option value="1">Sim</option><option value="0" selected>Não — só contexto</option></select></div>
+  </div>
+  <div class="buttons">
+    <button class="primary" id="scan">🔎 Atualizar Manada</button>
+    <button class="secondary" id="copyTop">📋 Copiar Top para SetupDT</button>
+    <button class="secondary" id="reportBtn">🧠 Relatório para ChatGPT</button>
+    <button class="secondary" id="speakBtn">🔊 Ouvir resumo</button>
+    <button class="secondary" id="stopSpeak">⏹ Parar áudio</button>
+  </div>
+  <div id="status" class="notice">Toque em <b>Atualizar Manada</b>. Depois das 21h a janela começa às 21:00; na manhã seguinte continua usando a sessão da noite anterior.</div>
+  <div class="progress"><i id="bar"></i></div>
+</section>
+
+<section class="panel">
+  <h2>🏆 Top Inteligente — força + qualidade de entrada</h2>
+  <div class="cards" id="topCards"><div class="card"><strong>Aguardando análise...</strong><p>O Top 3 aparecerá aqui.</p></div></div>
+</section>
+
+<section class="panel">
+  <h2>📊 Ranking completo</h2>
+  <div class="tableWrap">
+  <table>
+    <thead><tr>
+      <th>#</th><th>Ativo</th><th>Manada</th><th>Δ Manada</th><th>Entrada</th><th>Δ Entrada</th><th>Qualidade</th><th>Estrutura</th>
+      <th>Buy Flow sessão</th><th>Buy Flow 1h</th><th>Aceleração</th>
+      <th>Agressões compra*</th><th>Book bids</th><th>Vol. 24h</th>
+      <th>Vol. acel.</th><th>RSI 15m</th><th>Dist. VWAP</th><th>Dist. MME9</th><th>Espaço resist.</th><th>Mov. sessão</th><th>Leitura amanhã</th>
+    </tr></thead>
+    <tbody id="rows"><tr><td colspan="21" style="text-align:center;color:#9bb0c8;padding:25px">Sem dados ainda.</td></tr></tbody>
+  </table>
+  </div>
+  <div class="sub" style="margin-top:7px">* “Agressões compra” = participação de compras taker nas últimas negociações agregadas consultadas; não é contagem de pessoas únicas.</div>
+</section>
+
+
+<section class="panel" id="validationPanel">
+  <h2>✅ Validação posterior no SetupDT</h2>
+  <div class="notice">
+    Cole abaixo o histórico de sinais do SetupDT. O Radar usa <b>o sinal mais recente de cada ativo</b> para verificar se a Manada foi confirmada, rejeitada ou se a entrada ficou tardia.
+  </div>
+  <div class="setupBox" style="margin-top:10px">
+    <textarea id="setupInput" placeholder="Cole aqui os sinais do SetupDT, por exemplo:
+SOL • Binance Spot • 🟢 ENTRAR LONG • 04/10, 23:19
+Entrada $ 121,54 ...
+NOVO SINAL • 4h e 1h confirmam alta; 15m confirmou gatilho..."></textarea>
+  </div>
+  <div class="buttons">
+    <button class="good" id="validateSetup">🔗 Validar com SetupDT</button>
+    <button class="secondary" id="clearValidation">🧹 Limpar validação</button>
+    <button class="secondary" id="copyValidation">📋 Copiar resumo da validação</button>
+  </div>
+
+  <div class="validationGrid">
+    <div class="vstat"><small>Candidatos avaliados</small><strong id="vTotal">0</strong></div>
+    <div class="vstat"><small>✅ Confirmados LONG</small><strong id="vConfirmed" class="green">0</strong></div>
+    <div class="vstat"><small>❌ Rejeitados / venda</small><strong id="vRejected" class="red">0</strong></div>
+    <div class="vstat"><small>⏳ Sem sinal posterior</small><strong id="vPending" class="yellow">0</strong></div>
+    <div class="vstat"><small>Taxa de confirmação</small><strong id="vRate">—</strong></div>
+  </div>
+
+  <div class="tableWrap validationTable">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Ativo</th><th>Manada</th><th>Entrada</th><th>Ação Radar</th>
+        <th>Sinal SetupDT mais recente</th><th>Horário</th><th>Validação</th><th>Observação</th>
+      </tr></thead>
+      <tbody id="validationRows"><tr><td colspan="9" style="text-align:center;color:#9bb0c8;padding:22px">Cole o histórico do SetupDT e clique em Validar.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel" id="reportPanel" style="display:none">
+  <h2>🧠 Relatório inteligente para ChatGPT</h2>
+  <textarea id="report" readonly></textarea>
+  <div class="buttons"><button class="good" id="copyReport">📋 Copiar relatório</button></div>
+</section>
+
+<footer>Radar de fluxo, não ordem de compra. A V2.2 separa força da manada de qualidade da entrada, compara varreduras e valida posteriormente os candidatos com o sinal mais recente do SetupDT. “Manada” só é interessante quando há liquidez, persistência, estrutura e espaço técnico; preço esticado recebe penalidade. Confirme candidatos no SetupDT antes de qualquer decisão.</footer>
+</div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const BASES=['https://data-api.binance.vision','https://api.binance.com','https://api1.binance.com','https://api2.binance.com'];
+let results=[],btcResult=null,refreshTimer=null,countdownTimer=null,nextAt=0;
+const HISTORY_KEY='radar_manada_egi_v21_history';
+const VALIDATION_KEY='radar_manada_egi_v22_validation';
+let setupSignals={},validationSummary=null;
+let previousSnapshot={};
+const EXCLUDE=new Set(['USDC','FDUSD','TUSD','USDP','DAI','AEUR','EUR','TRY','BRL','BUSD','USTC','USDE','USD1','BFUSD']);
+const clamp=(x,a=0,b=100)=>Math.max(a,Math.min(b,x)), n=x=>Number(x);
+const fmtMoney=x=>x>=1e9?'$'+(x/1e9).toFixed(2)+'B':x>=1e6?'$'+(x/1e6).toFixed(1)+'M':x>=1e3?'$'+(x/1e3).toFixed(1)+'K':'$'+x.toFixed(0);
+const pct=x=>(Number.isFinite(x)?x.toFixed(1):'—')+'%', sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function loadSnapshot(){
+  try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'{}')||{}}catch(_){return{}}
+}
+function saveSnapshot(items){
+  const snap={_ts:Date.now()};
+  for(const x of items)snap[x.sym]={score:x.score,entryScore:x.entryScore,buyPct:x.buyPct,recentBuy:x.recentBuy,volAccel:x.volAccel,rank:x.rankNow||null};
+  try{localStorage.setItem(HISTORY_KEY,JSON.stringify(snap))}catch(_){}
+}
+function applyHistory(items,prev){
+  for(const x of items){
+    const p=prev&&prev[x.sym];
+    x.prev=p||null;
+    x.deltaScore=p?x.score-p.score:null;
+    x.deltaEntry=p?x.entryScore-p.entryScore:null;
+    x.deltaBuy=p?x.buyPct-p.buyPct:null;
+    x.deltaRecent=p?x.recentBuy-p.recentBuy:null;
+    x.deltaVolAccel=p?x.volAccel-p.volAccel:null;
+    x.momentumState=!p?'NOVO':x.deltaScore>=6&&x.deltaEntry>=4?'ACELERANDO':x.deltaScore<=-6||x.deltaEntry<=-6?'ENFRAQUECENDO':Math.abs(x.deltaScore)<2&&Math.abs(x.deltaEntry)<2?'ESTÁVEL':'MUDANDO';
+  }
+}
+function deltaText(v){if(v===null||!Number.isFinite(v))return'—';return`${v>=0?'+':''}${v.toFixed(1)}`}
+function deltaClass(v){if(v===null||!Number.isFinite(v))return'blue';return v>=4?'green':v<=-4?'red':Math.abs(v)<1.5?'blue':'yellow'}
+function momentumIcon(x){return x.momentumState==='ACELERANDO'?'🚀':x.momentumState==='ENFRAQUECENDO'?'↘️':x.momentumState==='ESTÁVEL'?'➡️':x.momentumState==='NOVO'?'🆕':'↕️'}
+
+
+async function jget(path){
+  let err;
+  for(const b of BASES){
+    try{const r=await fetch(b+path,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return await r.json()}catch(e){err=e}
+  }
+  throw err||Error('Fonte Binance indisponível');
+}
+function sessionInfo(){
+  const now=new Date();let start=new Date(now),mode='PREVIEW';
+  if(now.getHours()>=21){start.setHours(21,0,0,0);mode='AO VIVO'}
+  else if(now.getHours()<12){start.setDate(start.getDate()-1);start.setHours(21,0,0,0);mode='MADRUGADA/AMANHÃ'}
+  else{start=new Date(now.getTime()-6*3600000);mode='PRÉVIA 6H'}
+  const h=Number($('horizon').value||9),horizon=new Date(start);horizon.setDate(horizon.getDate()+1);horizon.setHours(h,0,0,0);
+  return{now,start,horizon,mode};
+}
+function calcRsi(vals,p=14){
+  if(vals.length<=p)return 50;let g=0,l=0;
+  for(let i=vals.length-p;i<vals.length;i++){const d=vals[i]-vals[i-1];if(d>0)g+=d;else l-=d}
+  if(l===0)return g===0?50:100;const rs=(g/p)/(l/p);return 100-100/(1+rs);
+}
+function ema(vals,p){
+  if(!vals.length)return 0;const k=2/(p+1);let e=vals[0];for(let i=1;i<vals.length;i++)e=vals[i]*k+e*(1-k);return e;
+}
+function sums(ks){let q=0,bq=0,tr=0,bv=0;for(const k of ks){q+=n(k[7]);bq+=n(k[10]);tr+=n(k[8]);bv+=n(k[5])}return{q,bq,tr,bv,buyPct:q?bq/q*100:50}}
+function analyzeKlines(sym,ks,qv24,sessionStart){
+  const closed=ks.filter(k=>n(k[6])<=Date.now());let ses=closed.filter(k=>n(k[0])>=sessionStart.getTime());if(ses.length<2)ses=closed.slice(-Math.min(24,closed.length));
+  const recent=ses.slice(-4),prior=ses.slice(0,Math.max(0,ses.length-4));const A=sums(ses),R=sums(recent),P=sums(prior.length?prior:ses.slice(0,-1));
+  const closes=closed.map(k=>n(k[4])),rsi=calcRsi(closes),first=n(ses[0]?.[1]),last=n(ses.at(-1)?.[4]);
+  const ema9=ema(closes.slice(-40),9),ema21=ema(closes.slice(-50),21),distEma9=ema9?(last/ema9-1)*100:0,distEma21=ema21?(last/ema21-1)*100:0;
+  const baseVol=ses.reduce((a,k)=>a+n(k[5]),0),quoteVol=ses.reduce((a,k)=>a+n(k[7]),0),vwap=baseVol?quoteVol/baseVol:last;
+  const distVwap=vwap?(last/vwap-1)*100:0,chg=first?(last/first-1)*100:0;
+  const prev8=ses.slice(-12,-4),last4=ses.slice(-4),last4Avg=last4.length?last4.reduce((a,k)=>a+n(k[7]),0)/last4.length:0,prevAvg=prev8.length?prev8.reduce((a,k)=>a+n(k[7]),0)/prev8.length:(A.q/Math.max(1,ses.length));
+  const priorBars=closed.slice(-34,-2),resistance=priorBars.length?Math.max(...priorBars.map(k=>n(k[2]))):last,spaceRes=last?Math.max(-20,(resistance/last-1)*100):0;
+  const trendUp=ema9>ema21&&last>=ema21,nearEma9=Math.abs(distEma9)<=1.8,retest=trendUp&&nearEma9&&rsi>=45&&rsi<=68;
+  return{sym,qv24,buyPct:A.buyPct,recentBuy:R.buyPct,accel:R.buyPct-P.buyPct,trades:A.tr,rsi,distVwap,distEma9,distEma21,ema9,ema21,trendUp,retest,resistance,spaceRes,chg,volAccel:prevAvg?last4Avg/prevAvg:1,last,vwap,sessionBars:ses.length};
+}
+function prelimScore(x,liqScore){
+  const flow=clamp(50+(x.buyPct-50)*4),recent=clamp(50+(x.recentBuy-50)*4.3),accel=clamp(50+x.accel*5),va=clamp(50+(x.volAccel-1)*38),mom=clamp(50+x.chg*7);
+  let stretch=100;if(x.rsi>70)stretch-=Math.min(60,(x.rsi-70)*5);if(x.distVwap>2.5)stretch-=Math.min(50,(x.distVwap-2.5)*11);if(x.distEma9>2.8)stretch-=Math.min(40,(x.distEma9-2.8)*9);if(x.chg>7)stretch-=Math.min(40,(x.chg-7)*5);if(x.rsi<38)stretch-=12;stretch=clamp(stretch);
+  const raw=.30*flow+.21*recent+.14*accel+.12*va+.11*liqScore+.12*mom;
+  const structure=clamp(45+(x.trendUp?18:-8)+(x.retest?16:0)+(x.spaceRes>=3?10:x.spaceRes>=1?3:-12)+(x.volAccel>=1.05?7:0));
+  const continuation=.70*raw+.18*stretch+.12*structure;
+  const entryBase=clamp(.33*raw+.30*stretch+.22*structure+.15*clamp(50+x.spaceRes*8));
+  return{raw,stretch,structureScore:structure,continuation,entryBase};
+}
+async function confirmFlow(x){
+  try{
+    const [aggs,depth]=await Promise.all([jget('/api/v3/aggTrades?symbol='+encodeURIComponent(x.sym)+'&limit=1000'),jget('/api/v3/depth?symbol='+encodeURIComponent(x.sym)+'&limit=100')]);
+    let buy=0,sell=0,buyQ=0,sellQ=0;for(const a of aggs){const q=n(a.p)*n(a.q);if(a.m===false){buy++;buyQ+=q}else{sell++;sellQ+=q}}
+    const aggPct=(buy+sell)?buy/(buy+sell)*100:50,aggVolPct=(buyQ+sellQ)?buyQ/(buyQ+sellQ)*100:50;
+    const bids=(depth.bids||[]).reduce((z,r)=>z+n(r[0])*n(r[1]),0),asks=(depth.asks||[]).reduce((z,r)=>z+n(r[0])*n(r[1]),0),bookPct=(bids+asks)?bids/(bids+asks)*100:50;
+    return{aggPct,aggVolPct,bookPct,buyAgg:buy,totalAgg:buy+sell};
+  }catch(_){return{aggPct:50,aggVolPct:50,bookPct:50,buyAgg:0,totalAgg:0}}
+}
+function classify(x){
+  const extended=x.rsi>74||x.distVwap>4.5||x.distEma9>4||x.chg>9;
+  const tightResistance=x.spaceRes<0.8;
+  if(extended&&x.buyPct>=55)return{label:'🔴 MANADA ATRASADA',quality:'Esticada',cls:'red',action:'NÃO PERSEGUIR'};
+  if(x.entryScore>=82&&x.score>=78&&x.buyPct>=56&&!tightResistance)return{label:'🚀 ENTRADA PRIORITÁRIA',quality:'Excelente',cls:'green',action:'CONFIRMAR SETUPDT'};
+  if(x.entryScore>=70&&x.score>=70)return{label:'🟢 MANADA SAUDÁVEL',quality:'Boa',cls:'green',action:'CONFIRMAR SETUPDT'};
+  if(x.score>=70&&(x.entryScore<70||tightResistance))return{label:'🟡 FORTE, AGUARDAR',quality:'Pullback',cls:'yellow',action:'ESPERAR PULLBACK'};
+  if(x.score>=60)return{label:'🟡 AQUECENDO',quality:'Regular',cls:'yellow',action:'OBSERVAR'};
+  if(x.buyPct<49)return{label:'🔴 VENDEDORES DOMINANDO',quality:'Fraca',cls:'red',action:'EVITAR LONG'};
+  return{label:'⚪ NEUTRA',quality:'Neutra',cls:'blue',action:'AGUARDAR'};
+}
+function structureText(x){if(x.retest)return'↗️ Rompimento/reteste';if(x.trendUp&&x.distEma9<=2.5)return'↗️ Tendência saudável';if(x.trendUp)return'⚠️ Alta esticada';if(x.ema9<x.ema21)return'↘️ Estrutura fraca';return'↔️ Transição'}
+function tomorrowReading(x){if(x.action==='NÃO PERSEGUIR')return'Esticada — esperar retorno';if(x.action==='ESPERAR PULLBACK')return'🟡 Forte, entrada ruim';if(x.entryScore>=82&&x.contScore>=78)return'🟢 Continuação + entrada';if(x.contScore>=70)return'🟡 Boa candidata';if(x.contScore>=60)return'⚪ Precisa confirmação';return'🔴 Baixa persistência'}
+function render(){
+  const out=results.slice(0,Number($('topn').value||15));
+  $('rows').innerHTML=out.map((x,i)=>`<tr><td class="rank">${i+1}</td><td class="sym">${x.sym.replace('USDT','')}</td><td class="score ${x.cls}">${Math.round(x.score)}/100</td><td class="score ${deltaClass(x.deltaScore)}">${momentumIcon(x)} ${deltaText(x.deltaScore)}</td><td class="score ${x.entryScore>=70?'green':x.entryScore>=55?'yellow':'red'}">${Math.round(x.entryScore)}/100</td><td class="score ${deltaClass(x.deltaEntry)}">${deltaText(x.deltaEntry)}</td><td><span class="badge ${x.entryScore>=70?'hot':x.action==='NÃO PERSEGUIR'?'warn':''}">${x.quality}</span></td><td>${structureText(x)}</td><td class="${x.buyPct>=55?'green':x.buyPct<49?'red':''}">${pct(x.buyPct)}</td><td class="${x.recentBuy>=55?'green':x.recentBuy<49?'red':''}">${pct(x.recentBuy)}</td><td>${x.accel>=0?'+':''}${pct(x.accel)}</td><td>${x.totalAgg?`${pct(x.aggPct)} (${x.buyAgg}/${x.totalAgg})`:'—'}</td><td>${pct(x.bookPct)}</td><td>${fmtMoney(x.qv24)}</td><td>${x.volAccel.toFixed(2)}x</td><td class="${x.rsi>74?'orange':''}">${x.rsi.toFixed(1)}</td><td class="${x.distVwap>4.5?'orange':''}">${x.distVwap>=0?'+':''}${pct(x.distVwap)}</td><td class="${x.distEma9>4?'orange':''}">${x.distEma9>=0?'+':''}${pct(x.distEma9)}</td><td class="${x.spaceRes<1?'orange':x.spaceRes>=3?'green':''}">${x.spaceRes.toFixed(1)}%</td><td>${x.chg>=0?'+':''}${pct(x.chg)}</td><td>${tomorrowReading(x)}</td></tr>`).join('')||'<tr><td colspan="21">Sem resultados.</td></tr>';
+  $('topCards').innerHTML=out.slice(0,3).map((x,i)=>`<div class="card"><span class="sub">#${i+1} • ${x.action}</span><br><strong>${x.sym.replace('USDT','')} • Manada ${Math.round(x.score)}/100</strong><p><b>${momentumIcon(x)} ${x.momentumState}</b> • Δ Manada ${deltaText(x.deltaScore)} • Δ Entrada ${deltaText(x.deltaEntry)}<br>Entrada ${Math.round(x.entryScore)}/100 • ${x.label}<br>${structureText(x)} • Espaço resist. ${x.spaceRes.toFixed(1)}%<br>Buy ${x.buyPct.toFixed(1)}% • 1h ${x.recentBuy.toFixed(1)}% • RSI ${x.rsi.toFixed(1)}<br><b>Por que agora?</b> ${x.action==='NÃO PERSEGUIR'?'Fluxo forte, mas preço já esticado.':x.action==='ESPERAR PULLBACK'?'Força existe, porém a relação entrada/risco melhoraria num recuo.':x.momentumState==='ACELERANDO'?'Fluxo e qualidade de entrada melhoraram desde a última leitura; confirmar no SetupDT.':'Fluxo, estrutura e entrada estão alinhados para confirmação.'}</p></div>`).join('')||'<div class="card">Sem candidatos.</div>';
+  $('leader').textContent=results[0]?results[0].sym.replace('USDT','')+' '+Math.round(results[0].score)+'/100':'—';if(btcResult)$('btcCtx').textContent=`${btcResult.buyPct.toFixed(1)}% buy • ${btcResult.chg>=0?'+':''}${btcResult.chg.toFixed(1)}%`;
+}
+
+function parseSetupDate(txt){
+  const m=(txt||'').match(/(\d{2})\/(\d{2})(?:\/(\d{4}))?,\s*(\d{2}):(\d{2})/);
+  if(!m)return null;
+  const now=new Date(),year=m[3]?Number(m[3]):now.getFullYear();
+  return new Date(year,Number(m[2])-1,Number(m[1]),Number(m[4]),Number(m[5]),0,0);
+}
+function parseSetupSignals(text){
+  const lines=(text||'').split(/\r?\n/), found=[];
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i].trim();
+    const m=line.match(/^\*{0,2}([A-Z0-9]{2,15})\s*•\s*Binance Spot\s*•\s*([^•]+)\s*•\s*(\d{2}\/\d{2}(?:\/\d{4})?,\s*\d{2}:\d{2})/i);
+    if(!m)continue;
+    const sym=m[1].toUpperCase()+'USDT', label=m[2].replace(/\*/g,'').trim(), dt=parseSetupDate(m[3]);
+    let details='';
+    for(let j=i+1;j<Math.min(lines.length,i+5);j++){
+      if(/^[A-Z0-9]{2,15}\s*•\s*Binance Spot/i.test(lines[j].trim()))break;
+      details+=' '+lines[j].trim();
+    }
+    let side='NEUTRO';
+    if(/ENTRAR LONG|LONG/i.test(label))side='LONG';
+    if(/VENDA\/SAÍDA|SHORT|VENDA/i.test(label))side='SHORT';
+    found.push({sym,label,side,dt,details:details.trim()});
+  }
+  const latest={};
+  for(const s of found){
+    if(!latest[s.sym] || ((s.dt?.getTime()||0)>(latest[s.sym].dt?.getTime()||0))) latest[s.sym]=s;
+  }
+  return latest;
+}
+function validationStatus(x,sig){
+  if(!sig)return {status:'PENDENTE',cls:'yellow',obs:'Nenhum sinal posterior encontrado no texto colado.'};
+  if(sig.side==='LONG'){
+    if(x.action==='NÃO PERSEGUIR' || x.entryScore<55) return {status:'CONFIRMOU, MAS TARDIA',cls:'orange',obs:'SetupDT confirmou alta, porém o Radar já mostrava qualidade de entrada fraca/esticada.'};
+    return {status:'CONFIRMADA',cls:'green',obs:'Fluxo da Manada recebeu confirmação técnica 15m/1h/4h no SetupDT.'};
+  }
+  if(sig.side==='SHORT') return {status:'REJEITADA',cls:'red',obs:'Pressão compradora não virou tendência; o SetupDT mais recente confirmou baixa/saída.'};
+  return {status:'NEUTRA',cls:'yellow',obs:'Sinal mais recente não foi classificado como LONG ou venda.'};
+}
+function runValidation(){
+  if(!results.length)return alert('Atualize o Radar Manada primeiro.');
+  setupSignals=parseSetupSignals($('setupInput').value);
+  const candidates=results.slice(0,Math.min(Number($('topn').value||15),15));
+  let confirmed=0,rejected=0,pending=0,late=0;
+  const rows=candidates.map((x,i)=>{
+    const s=setupSignals[x.sym],v=validationStatus(x,s);
+    if(v.status==='CONFIRMADA')confirmed++;
+    else if(v.status==='REJEITADA')rejected++;
+    else if(v.status==='CONFIRMOU, MAS TARDIA'){confirmed++;late++}
+    else pending++;
+    const when=s?.dt?s.dt.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+    return `<tr><td>${i+1}</td><td class="sym">${x.sym.replace('USDT','')}</td><td>${Math.round(x.score)}/100</td><td>${Math.round(x.entryScore)}/100</td><td>${x.action}</td><td>${s?s.label:'—'}</td><td>${when}</td><td class="${v.cls}"><b>${v.status}</b></td><td style="text-align:left;white-space:normal;min-width:280px">${v.obs}</td></tr>`;
+  });
+  const decided=confirmed+rejected,rate=decided?confirmed/decided*100:null;
+  validationSummary={total:candidates.length,confirmed,rejected,pending,late,rate,generatedAt:new Date().toISOString()};
+  $('vTotal').textContent=candidates.length;$('vConfirmed').textContent=confirmed;$('vRejected').textContent=rejected;$('vPending').textContent=pending;
+  $('vRate').textContent=rate===null?'—':rate.toFixed(1)+'%';
+  $('validationRows').innerHTML=rows.join('');
+  try{localStorage.setItem(VALIDATION_KEY,JSON.stringify({text:$('setupInput').value,summary:validationSummary}))}catch(_){}
+}
+function validationText(){
+  if(!validationSummary)return 'Sem validação calculada.';
+  return `VALIDAÇÃO SETUPDT — RADAR MANADA EGI V2.2
+Gerado em: ${new Date().toLocaleString('pt-BR')}
+Candidatos avaliados: ${validationSummary.total}
+Confirmados LONG: ${validationSummary.confirmed}
+Rejeitados / venda: ${validationSummary.rejected}
+Sem sinal posterior: ${validationSummary.pending}
+Confirmações tardias/esticadas: ${validationSummary.late}
+Taxa de confirmação entre sinais decididos: ${validationSummary.rate==null?'—':validationSummary.rate.toFixed(1)+'%'}`;
+}
+function restoreValidation(){
+  try{
+    const v=JSON.parse(localStorage.getItem(VALIDATION_KEY)||'null');
+    if(v?.text)$('setupInput').value=v.text;
+  }catch(_){}
+}
+
+function buildReport(){
+  const si=sessionInfo(),top=results.slice(0,Math.min(15,Number($('topn').value||15)));
+  let t=`RELATÓRIO INTELIGENTE PARA CHATGPT — RADAR MANADA EGI V2.2 — MANADA + VALIDAÇÃO SETUPDT
+Gerado em: ${new Date().toLocaleString('pt-BR')}
+Fonte: Binance Spot pública
+Sessão usada: ${si.start.toLocaleString('pt-BR')} → agora
+Horizonte informativo: ${si.horizon.toLocaleString('pt-BR')}
+
+OBJETIVO
+Identificar onde há maior pressão compradora executada e separar força da manada de qualidade da entrada, priorizando continuidade até amanhã sem perseguir preço esticado.
+IMPORTANTE: “agressões de compra” não são compradores únicos.
+
+TOP ${top.length}
+`;
+  top.forEach((x,i)=>{t+=`${i+1}. ${x.sym} | Manada ${Math.round(x.score)}/100 | ΔManada ${deltaText(x.deltaScore)} | Entrada ${Math.round(x.entryScore)}/100 | ΔEntrada ${deltaText(x.deltaEntry)} | tendência ${x.momentumState} | ${x.label} | ${structureText(x)} | espaço resistência ${x.spaceRes.toFixed(1)}% | dist MME9 ${x.distEma9.toFixed(1)}% | Buy sessão ${x.buyPct.toFixed(1)}% | Buy 1h ${x.recentBuy.toFixed(1)}% | acel ${x.accel>=0?'+':''}${x.accel.toFixed(1)}pp | agressões ${x.aggPct.toFixed(1)}% | book bids ${x.bookPct.toFixed(1)}% | vol24h ${fmtMoney(x.qv24)} | vol acel ${x.volAccel.toFixed(2)}x | RSI ${x.rsi.toFixed(1)} | dist VWAP ${x.distVwap.toFixed(1)}% | mov sessão ${x.chg.toFixed(1)}% | ação ${x.action} | amanhã ${tomorrowReading(x)}
+`;});
+  if(btcResult)t+=`
+CONTEXTO BTC
+BTC Buy Flow ${btcResult.buyPct.toFixed(1)}% | 1h ${btcResult.recentBuy.toFixed(1)}% | movimento sessão ${btcResult.chg.toFixed(1)}% | RSI ${btcResult.rsi.toFixed(1)}.
+`;
+  t+=`
+${validationSummary?`\nVALIDAÇÃO POSTERIOR SETUPDT\nCandidatos avaliados ${validationSummary.total} | Confirmados LONG ${validationSummary.confirmed} | Rejeitados ${validationSummary.rejected} | Pendentes ${validationSummary.pending} | Taxa ${validationSummary.rate==null?'—':validationSummary.rate.toFixed(1)+'%'}\n`:''}\nPEDIDO AO CHATGPT\nQuero um parecer sobre quais 3 a 5 moedas têm a melhor combinação de pressão compradora + persistência + liquidez + qualidade de entrada para acompanhar até amanhã. Compare Score Manada com Score Entrada e também a mudança desde a varredura anterior (Δ Manada e Δ Entrada). Dê preferência a candidatos ACELERANDO quando a entrada ainda for saudável. Penalize manada atrasada, resistência próxima, RSI/VWAP/MME9 esticados. Valorize rompimento/reteste e espaço técnico. Diga quais devem ir ao SetupDT para confirmação 15m/1h/4h, quais devem esperar pullback e quais devem ser evitadas por entrada tardia.`;
+  return t;
+}
+async function scan(){
+  if($('scan').disabled)return;$('scan').disabled=true;previousSnapshot=loadSnapshot();results=[];btcResult=null;$('state').textContent='Analisando';$('bar').style.width='2%';
+  try{
+    const si=sessionInfo();$('sessionLabel').textContent=si.mode+' • '+si.start.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});$('status').className='notice';$('status').textContent='Buscando universo por liquidez...';
+    const [ticker,info]=await Promise.all([jget('/api/v3/ticker/24hr'),jget('/api/v3/exchangeInfo')]);
+    const tradable=new Set((info.symbols||[]).filter(s=>s.status==='TRADING'&&s.quoteAsset==='USDT'&&s.isSpotTradingAllowed!==false).map(s=>s.symbol));
+    const minVol=Number($('minVol').value),limit=Number($('universe').value),includeBtc=$('includeBtc').value==='1';
+    let universe=ticker.filter(x=>tradable.has(x.symbol)&&x.symbol.endsWith('USDT')).map(x=>({sym:x.symbol,qv24:n(x.quoteVolume)})).filter(x=>x.qv24>=minVol).filter(x=>{const b=x.sym.slice(0,-4);return!EXCLUDE.has(b)&&!/(UP|DOWN|BULL|BEAR)$/.test(b)}).sort((a,b)=>b.qv24-a.qv24);
+    const btcMeta=universe.find(x=>x.sym==='BTCUSDT')||{sym:'BTCUSDT',qv24:0};universe=universe.filter(x=>includeBtc||x.sym!=='BTCUSDT').slice(0,limit);$('universeCount').textContent=universe.length;
+    const qlogs=universe.map(x=>Math.log10(Math.max(1,x.qv24))),qmin=Math.min(...qlogs),qmax=Math.max(...qlogs),prelim=[];let done=0;
+    async function worker(items){while(items.length){const m=items.shift();try{const ks=await jget('/api/v3/klines?symbol='+m.sym+'&interval=15m&limit=64');const x=analyzeKlines(m.sym,ks,m.qv24,si.start);const liq=qmax>qmin?40+(Math.log10(m.qv24)-qmin)/(qmax-qmin)*60:70;Object.assign(x,prelimScore(x,liq));prelim.push(x)}catch(e){}done++;$('bar').style.width=(5+65*done/Math.max(1,universe.length))+'%'}}
+    const queue=[...universe];await Promise.all(Array.from({length:Math.min(8,queue.length)},()=>worker(queue)));
+    try{const bks=await jget('/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=64');btcResult=analyzeKlines('BTCUSDT',bks,btcMeta.qv24,si.start)}catch(_){}
+    prelim.sort((a,b)=>b.continuation-a.continuation);const finals=prelim.slice(0,Math.min(15,prelim.length));$('status').textContent='Confirmando Top 15 com agressões recentes e book...';
+    for(let i=0;i<finals.length;i++){Object.assign(finals[i],await confirmFlow(finals[i]));const aggScore=clamp(50+(finals[i].aggPct-50)*4),aggVolScore=clamp(50+(finals[i].aggVolPct-50)*4),bookScore=clamp(50+(finals[i].bookPct-50)*2.5);finals[i].score=.68*finals[i].raw+.12*aggScore+.10*aggVolScore+.10*bookScore;finals[i].contScore=.75*finals[i].continuation+.25*finals[i].score;finals[i].entryScore=clamp(.62*finals[i].entryBase+.20*finals[i].score+.10*aggVolScore+.08*bookScore);Object.assign(finals[i],classify(finals[i]));$('bar').style.width=(70+28*(i+1)/finals.length)+'%';await sleep(35)}
+    for(const x of prelim.slice(finals.length)){x.aggPct=50;x.aggVolPct=50;x.bookPct=50;x.buyAgg=0;x.totalAgg=0;x.score=x.raw;x.contScore=x.continuation;x.entryScore=x.entryBase;Object.assign(x,classify(x))}
+    results=[...finals,...prelim.slice(finals.length)].sort((a,b)=>(b.entryScore*0.55+b.score*0.45)-(a.entryScore*0.55+a.score*0.45));
+    results.forEach((x,i)=>x.rankNow=i+1);applyHistory(results,previousSnapshot);
+    $('bar').style.width='100%';$('state').textContent='Pronto';$('status').className='notice ok';
+    const histTs=previousSnapshot&&previousSnapshot._ts?new Date(previousSnapshot._ts).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):null;
+    $('status').textContent=`Análise concluída. Horizonte: ${si.horizon.toLocaleString('pt-BR')}. ${histTs?'Comparada com a leitura das '+histTs+'.':'Primeira leitura: histórico criado para a próxima comparação.'}`;
+    render();saveSnapshot(results);scheduleAuto();
+  }catch(e){$('state').textContent='Falha';$('status').className='notice warn';$('status').textContent='Falha na consulta: '+(e.message||e)+'. Tente novamente em alguns segundos.'}finally{$('scan').disabled=false}
+}
+function scheduleAuto(){clearTimeout(refreshTimer);clearInterval(countdownTimer);const sec=Number($('auto').value||0);if(!sec){$('nextRefresh').textContent='Manual';return}nextAt=Date.now()+sec*1000;refreshTimer=setTimeout(scan,sec*1000);countdownTimer=setInterval(()=>{const d=Math.max(0,Math.ceil((nextAt-Date.now())/1000));$('nextRefresh').textContent=Math.floor(d/60)+':'+String(d%60).padStart(2,'0')},1000)}
+async function copyText(t){try{await navigator.clipboard.writeText(t)}catch(_){const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();document.execCommand('copy');ta.remove()}}
+$('scan').onclick=scan;$('auto').onchange=scheduleAuto;
+
+$('validateSetup').onclick=runValidation;
+$('clearValidation').onclick=()=>{$('setupInput').value='';setupSignals={};validationSummary=null;$('validationRows').innerHTML='<tr><td colspan="9" style="text-align:center;color:#9bb0c8;padding:22px">Validação limpa.</td></tr>';$('vTotal').textContent='0';$('vConfirmed').textContent='0';$('vRejected').textContent='0';$('vPending').textContent='0';$('vRate').textContent='—';try{localStorage.removeItem(VALIDATION_KEY)}catch(_){}};
+$('copyValidation').onclick=async()=>{await copyText(validationText());$('status').textContent='📋 Resumo da validação copiado.'};
+
+$('copyTop').onclick=async()=>{if(!results.length)return alert('Atualize o radar primeiro.');const list=results.slice(0,10).filter(x=>x.action!=='NÃO PERSEGUIR'&&x.entryScore>=60).map(x=>x.sym.replace('USDT','')).join(', ');await copyText(list);$('status').textContent='📋 Top copiado: '+list};
+$('reportBtn').onclick=()=>{if(!results.length)return alert('Atualize o radar primeiro.');$('report').value=buildReport();$('reportPanel').style.display='block';$('reportPanel').scrollIntoView({behavior:'smooth'})};
+$('copyReport').onclick=async()=>{await copyText($('report').value);$('status').textContent='📋 Relatório copiado para enviar ao ChatGPT.'};
+$('speakBtn').onclick=()=>{if(!results.length)return alert('Atualize o radar primeiro.');speechSynthesis.cancel();const tx='Radar Manada EGI. '+results.slice(0,5).map((x,i)=>`Número ${i+1}, ${x.sym.replace('USDT','')}, manada ${Math.round(x.score)}, entrada ${Math.round(x.entryScore)}, buy flow ${x.buyPct.toFixed(0)} por cento.`).join(' ')+' Confirme no Setup D T e não persiga preço esticado.';const u=new SpeechSynthesisUtterance(tx);u.lang='pt-BR';u.rate=.92;speechSynthesis.speak(u)};
+$('stopSpeak').onclick=()=>speechSynthesis.cancel();
+window.addEventListener('load',()=>{restoreValidation();const si=sessionInfo();$('sessionLabel').textContent=si.mode+' • '+si.start.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});scheduleAuto()});
+</script>
+</body></html>

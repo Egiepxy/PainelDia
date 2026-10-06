@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "versao": "1.3",
+  "regra": "Versão muda; nome oficial não muda.",
+  "apps": {
+    "inicio_dia": {
+      "nome": "Painel Início do Dia EGI",
+      "arquivo": "inicio-dia.html",
+      "status": "ativo"
+    },
+    "manada": {
+      "nome": "Radar Manada EGI",
+      "arquivo": "manada.html",
+      "status": "ativo",
+      "versao_origem": "V2.2"
+    },
+    "volatilidade": {
+      "nome": "Radar Volatilidade EGI",
+      "arquivo": "volatilidade.html",
+      "status": "ativo",
+      "versao_origem": "V2.3"
+    },
+    "confluencia": {
+      "nome": "Radar Confluência EGI",
+      "arquivo": "confluencia.html",
+      "status": "ativo",
+      "versao_origem": "V4.5"
+    },
+    "setupdt": {
+      "nome": "SetupDT Light",
+      "arquivo": "setupdt.html",
+      "status": "ativo",
+      "versao_origem": "V1.9.20"
+    },
+    "kdj": {
+      "nome": "Radar KDJ Simples",
+      "arquivo": "kdj.html",
+      "status": "ativo",
+      "versao_origem": "V5.3"
+    },
+    "virada_fluxo": {
+      "nome": "Radar Virada de Fluxo EGI",
+      "arquivo": "virada-fluxo.html",
+      "status": "ativo",
+      "versao_origem": "V3.8"
+    },
+    "proximas_fortes": {
+      "nome": "Radar Próximas Fortes EGI",
+      "arquivo": "proximas-fortes.html",
+      "status": "ativo",
+      "versao_origem": "V10.5"
+    },
+    "btc": {
+      "nome": "BTC_Padrao — Multiativo",
+      "arquivo": "btc.html",
+      "status": "ativo",
+      "versao_origem": "V8.9.4"
+    },
+    "smc": {
+      "nome": "Contexto SMC",
+      "arquivo": "confluencia.html",
+      "status": "integrado_em_confluencia"
+    }
+  }
+}

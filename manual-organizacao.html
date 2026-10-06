@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manual de Organização dos Apps EGI</title>
+<meta name="theme-color" content="#0f172a">
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#0b1220;color:#e5e7eb;margin:0;line-height:1.6}
+main{max-width:900px;margin:auto;padding:24px}
+h1,h2{color:#fff}
+.card{background:#111827;border:1px solid #263247;border-radius:14px;padding:18px;margin:14px 0}
+code,pre{background:#020617;color:#d1fae5;border-radius:10px}
+pre{padding:14px;overflow:auto}
+button{background:#0f766e;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:bold;margin-right:8px;cursor:pointer}
+.note{color:#93c5fd}
+.good{color:#86efac}
+footer{color:#64748b;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>📘 Manual de Organização dos Apps EGI</h1>
+<p class="note">Objetivo: manter todos os apps organizados, com nomes fixos e links estáveis, evitando que uma nova versão quebre a Central ou o Painel Início do Dia.</p>
+
+<div class="card">
+<h2>1. Regra principal</h2>
+<p>O melhor padrão é não fazer cada app “procurar” arquivos diferentes toda vez. Em vez disso, cada ferramenta deve ter um <strong>nome fixo oficial</strong>.</p>
+<p>Exemplo: podem existir versões como <code>Radar_Manada_V2.3.html</code>, mas a versão aprovada também deve ser salva como <code>Radar_Manada.html</code>.</p>
+</div>
+
+<div class="card">
+<h2>2. Estrutura recomendada no notebook</h2>
+<pre>C:\MeusProj26\EGI\
+│
+├─ Painel_Inicio_Dia_EGI.html
+├─ BTC.html
+├─ Radar_Manada.html
+├─ Radar_Volatilidade.html
+├─ Radar_Confluencia.html
+├─ Contexto_SMC.html
+├─ SetupDT.html
+└─ Radar_KDJ.html</pre>
+<p class="good">Assim, o botão de um app pode abrir diretamente outro arquivo usando um endereço relativo.</p>
+</div>
+
+<div class="card">
+<h2>3. Estrutura recomendada no celular / Render / GitHub</h2>
+<pre>/public/
+   index.html
+   inicio-dia.html
+   btc.html
+   manada.html
+   volatilidade.html
+   confluencia.html
+   smc.html
+   setupdt.html
+   kdj.html</pre>
+<p>O ideal é usar links relativos, por exemplo: <code>./manada.html</code>, <code>./setupdt.html</code> e <code>./kdj.html</code>.</p>
+</div>
+
+<div class="card">
+<h2>4. Por que isso é melhor no Android</h2>
+<p>Quando um HTML é aberto pelo Android usando um endereço do tipo <code>content://downloads...</code>, o navegador pode limitar o acesso direto a outros arquivos locais. Por isso, para uso confiável no celular, é melhor publicar os apps juntos no mesmo ambiente, como Render ou GitHub Pages.</p>
+</div>
+
+<div class="card">
+<h2>5. Cadastro central com apps.json</h2>
+<p>Para evitar que cada app guarde seus próprios links, podemos criar um único arquivo de cadastro:</p>
+<pre>{
+  "btc": "btc.html",
+  "manada": "manada.html",
+  "volatilidade": "volatilidade.html",
+  "confluencia": "confluencia.html",
+  "smc": "smc.html",
+  "setupdt": "setupdt.html",
+  "kdj": "kdj.html"
+}</pre>
+<p>A Central EGI, o Painel Início do Dia e outros apps passam a consultar o mesmo cadastro.</p>
+</div>
+
+<div class="card">
+<h2>6. Regra para novas versões</h2>
+<p>Durante os testes, mantenha o número da versão no nome do arquivo.</p>
+<pre>Radar_Manada_V2.4.html
+Radar_Manada_V2.5.html</pre>
+<p>Quando uma versão for aprovada, copie também como:</p>
+<pre>Radar_Manada.html</pre>
+<p>Dessa forma, os links da Central não precisam ser alterados.</p>
+</div>
+
+<div class="card">
+<h2>7. Arquitetura recomendada</h2>
+<pre>Central EGI
+   ↓
+apps.json
+   ↓
+BTC
+Manada
+Volatilidade
+Confluência
+SMC
+SetupDT
+KDJ</pre>
+<p class="good">Benefícios: menos erros, menos manutenção, links estáveis, atualização mais simples e melhor funcionamento no notebook e no celular.</p>
+</div>
+
+<div class="card">
+<h2>8. Regra prática EGI</h2>
+<p><strong>Versão muda; nome oficial não muda.</strong></p>
+<p>Esse é o princípio que mantém toda a estrutura funcionando mesmo quando os apps evoluem.</p>
+</div>
+
+<div class="card">
+<h2>🔊 Ouvir este manual</h2>
+<button onclick="ouvir()">Ouvir</button>
+<button onclick="parar()">Parar</button>
+</div>
+</main>
+
+<footer>Manual EGI — Organização e Integração dos Apps</footer>
+
+<script>
+function ouvir(){
+  parar();
+  const texto=document.querySelector('main').innerText;
+  const u=new SpeechSynthesisUtterance(texto);
+  u.lang='pt-BR';
+  u.rate=0.95;
+  speechSynthesis.speak(u);
+}
+function parar(){speechSynthesis.cancel();}
+</script>
+</body>
+</html>

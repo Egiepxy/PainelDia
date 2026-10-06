@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08111f"><title>Central EGI V1.3</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07101d;color:#edf6ff;font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:14px}.hero,.card{background:#101b2c;border:1px solid #29445f;border-radius:17px;padding:16px;margin:10px 0}
+h1{margin:0 0 6px;font-size:clamp(24px,6vw,38px)}h2{font-size:18px;margin:0 0 10px}.muted{color:#9fb7d2}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.app{display:block;text-decoration:none;color:#fff;background:#132338;border:1px solid #385574;border-radius:14px;padding:14px}
+.app b{display:block;font-size:17px}.app span{color:#9fb7d2;font-size:12px}.app:hover{border-color:#39d7ef}.pending{opacity:.55;cursor:not-allowed}
+.primary{background:#0d5f70;border-color:#39d7ef}.rule{font-weight:900;color:#7ee7c3}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+</style></head><body><main class="wrap">
+<section class="hero"><div class="muted">EGI • CENTRAL DE APPS • NOMES FIXOS</div><h1>🧭 Central EGI V1.3</h1>
+<p class="rule">Versão muda; nome oficial não muda.</p>
+<p class="muted">Abra os apps pelos nomes fixos. As versões originais ficam arquivadas em <code>versions/</code>.</p></section>
+
+<section class="card"><h2>🌅 Rotina do dia</h2>
+<div class="grid">
+<a class="app primary" href="inicio-dia.html"><b>📊 Painel Início do Dia</b><span>Comece por aqui.</span></a>
+<a class="app" href="btc.html"><b>₿ BTC Padrão</b><span>Contexto principal do mercado • 15m/1h/4h/1D.</span></a>
+<a class="app" href="manada.html"><b>🐂 Radar Manada</b><span>Pressão e persistência de fluxo.</span></a>
+<a class="app" href="volatilidade.html"><b>🌪️ Radar Volatilidade</b><span>Movimento + qualidade + equilíbrio + risco.</span></a>
+<a class="app" href="confluencia.html"><b>🧭 Confluência + SMC</b><span>Contexto e filtro em camadas.</span></a>
+<a class="app" href="setupdt.html"><b>🎯 SetupDT</b><span>Confirmação final da candidata.</span></a>
+<a class="app" href="kdj.html"><b>📈 KDJ</b><span>Gatilho e estágio do ciclo.</span></a>
+</div></section>
+
+<section class="card"><h2>🔎 Ferramentas auxiliares</h2>
+<div class="grid">
+<a class="app" href="virada-fluxo.html"><b>🔄 Virada de Fluxo</b><span>F1 venda secando → F2 compradores entrando.</span></a>
+<a class="app" href="proximas-fortes.html"><b>🚀 Próximas Fortes</b><span>Força relativa, momentum e liquidez.</span></a>
+<a class="app" href="manual-organizacao.html"><b>📘 Manual de Organização</b><span>Arquitetura e regra dos nomes fixos.</span></a>
+</div></section>
+
+<section class="card"><h2>📁 Arquivos do sistema</h2>
+<p><b>apps.json</b> = cadastro central dos apps.</p>
+<p><b>versions/</b> = cópia dos arquivos originais com número de versão.</p>
+<p class="muted">No Android, prefira usar esta pasta publicada no Render/GitHub. Abrir diretamente por <code>content://</code> pode limitar links relativos entre arquivos.</p>
+</section>
+</main></body></html>
