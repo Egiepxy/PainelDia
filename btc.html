@@ -722,12 +722,18 @@ Este texto é apenas informativo. O semáforo, o plano de entrada, o stop, os al
 
     <div class="smartActions">
       <button class="primary" onclick="generateSmartReport()">🧠 Gerar Relatório Completo</button>
+      <button class="good" onclick="generateSimplifiedGPT(true)">⚡ RelGPT Simplificado</button>
+      <button onclick="copySimplifiedGPT()">📋 Copiar Simplificado</button>
       <button class="good" onclick="downloadChatGPTReport()">📎 Baixar Relatório para ChatGPT</button>
       <button onclick="copyReport()">📋 Copiar Relatório</button>
       <button onclick="speakReport()">🔊 Ouvir Relatório</button>
     </div>
 
     <div id="report" class="report">O relatório completo será montado automaticamente após buscar os dados.</div>
+    <div id="simpleReportWrap" style="display:none;margin-top:12px">
+      <div class="small" style="margin-bottom:6px"><b>RelGPT Simplificado — para Painel do Dia</b></div>
+      <div id="simpleReport" class="report"></div>
+    </div>
   </div>
 
   <div class="section card">
@@ -775,7 +781,7 @@ Este texto é apenas informativo. O semáforo, o plano de entrada, o stop, os al
   </div>
 
   <div class="footer">
-    BTC_Padrao V8.9.4 MULTIATIVO • CONTEXTO + GATILHO • PROJEÇÃO IA • R:R INTELIGENTE com índices independentes Day Trade e Swing Trade, 5m visível no rastreador, regra dinâmica 2/3 por modo e R:R atual separado do R:R do modelo, Índice SetupDT, Assimetria LONG/SHORT/AGUARDAR, checklist direcional, separação entre viés e direção MTF confirmada, RSI em 3 estados sem sobreposição (favorável/neutro/desfavorável), Qualidade do Contexto separada da Qualidade da Entrada Agora, Parecer Inteligente macro/intraday, Próximo Gatilho com volume explícito e monitor automático de avisos LONG/SHORT com confirmação por candle fechado e bloqueio por Exaustão Dual Mode (Day Trade 5m+15m / Swing 4h+1D) e trava hierárquica de qualidade: R:R < 1,00 limita a 49/100; R:R de 1,00 a 1,49 limita a 59/100; MTF abaixo de 2/3 impede PREPARAR. V8.3 adicionou R:R Inteligente com stop mínimo por ATR (0,35 ATR Day Trade / 0,50 ATR Swing), pontuação de R:R limitada a 4:1 e Manual Completo com áudio/velocidade. V8.4 adiciona Projeção IA do Movimento com alvo provável, alvo estendido, zona de exaustão, espaço técnico, invalidação e consistência 0–100. V8.5 adiciona a camada Estratégia Consciente EGI: contexto, estrutura, região, gatilho, invalidação, alvo e texto completo com áudio. V8.6 adiciona Exaustão + Figuras Gráficas: W/M e triângulos simples, timeframe explícito da figura, 1h como confirmação, 4h como contexto e Relatório Inteligente de Reversão GPT. V8.7 adiciona Relatório Inteligente EGI resumido, atualização automática 30s/1m/5m, histórico persistente de mudanças relevantes e aviso sonoro/voz configurável para pré-gatilho, confirmação e invalidação. Não garante resultados. Use stop e gerenciamento de risco.
+    BTC_Padrao V8.9.5 MULTIATIVO • CONTEXTO + GATILHO • PROJEÇÃO IA • R:R INTELIGENTE com índices independentes Day Trade e Swing Trade, 5m visível no rastreador, regra dinâmica 2/3 por modo e R:R atual separado do R:R do modelo, Índice SetupDT, Assimetria LONG/SHORT/AGUARDAR, checklist direcional, separação entre viés e direção MTF confirmada, RSI em 3 estados sem sobreposição (favorável/neutro/desfavorável), Qualidade do Contexto separada da Qualidade da Entrada Agora, Parecer Inteligente macro/intraday, Próximo Gatilho com volume explícito e monitor automático de avisos LONG/SHORT com confirmação por candle fechado e bloqueio por Exaustão Dual Mode (Day Trade 5m+15m / Swing 4h+1D) e trava hierárquica de qualidade: R:R < 1,00 limita a 49/100; R:R de 1,00 a 1,49 limita a 59/100; MTF abaixo de 2/3 impede PREPARAR. V8.3 adicionou R:R Inteligente com stop mínimo por ATR (0,35 ATR Day Trade / 0,50 ATR Swing), pontuação de R:R limitada a 4:1 e Manual Completo com áudio/velocidade. V8.4 adiciona Projeção IA do Movimento com alvo provável, alvo estendido, zona de exaustão, espaço técnico, invalidação e consistência 0–100. V8.5 adiciona a camada Estratégia Consciente EGI: contexto, estrutura, região, gatilho, invalidação, alvo e texto completo com áudio. V8.6 adiciona Exaustão + Figuras Gráficas: W/M e triângulos simples, timeframe explícito da figura, 1h como confirmação, 4h como contexto e Relatório Inteligente de Reversão GPT. V8.7 adiciona Relatório Inteligente EGI resumido, atualização automática 30s/1m/5m, histórico persistente de mudanças relevantes e aviso sonoro/voz configurável para pré-gatilho, confirmação e invalidação. Não garante resultados. Use stop e gerenciamento de risco.
   </div>
 </div>
 
@@ -3414,7 +3420,7 @@ function buildChatGPTReport(d){
   const waitReasons=x.asymmetry.waitReasons.slice(0,8).map(v=>`• ${v}`).join('\n')||'• baixa necessidade técnica de espera';
   const volumeLine=x.a.volumePartial?`Candle em formação: SIM • ${(x.a.volumeProgress*100).toFixed(0)}% formado • volume parcial ${Number.isFinite(x.a.volumeRaw)?x.a.volumeRaw.toFixed(2):'n/d'}x • projeção ${Number.isFinite(x.a.volumeProjected)?x.a.volumeProjected.toFixed(2):'n/d'}x • referência efetiva ${x.a.vmult.toFixed(2)}x`:`Candle em formação: NÃO • volume confirmado ${x.a.vmult.toFixed(2)}x`;
 
-  return `========================================\nBTC_PADRAO — RELATÓRIO INTELIGENTE V8.9.4\nData/Hora: ${new Date().toLocaleString('pt-BR')}\nFonte: ${d.source}\nAtivo: ${prettySymbol(d.symbol)}\nTimeframe principal: ${tfName(x.tf)}\n========================================\n\n0. EXAUSTÃO + FIGURAS GRÁFICAS — REVERSÃO\n${(()=>{const r=buildReversalAnalysis(d),p=r.best;return `${r.state}\nFigura principal: ${p.type==='NONE'?'Sem figura forte':p.name+' — '+reversalTfLabel(p.tf)+' — '+r.score+'/100'}\nEstágio: ${r.stage}\nConfirmação 1h: ${r.t1.dir} ${r.t1.label} — ${r.confirm1h}\nContexto 4h: ${r.t4.dir} ${r.t4.label} — ${r.context4h}\n${reversalLevelsText(r)}\n${reversalBeginnerText(r)}`;})()}\n\n1. RESUMO EXECUTIVO\nDireção/Viés: ${x.directionLabel}\nÍndice SetupDT: ${x.index}/100 — ${x.indexLabel}\nMomento: ${x.moment}\nQualidade do contexto: ${x.z.quality}/100 — ${x.z.qualityLabel}\nQualidade da entrada agora: ${x.index}/100 — ${x.indexLabel}\nÍndice DAY TRADE: ${x.modeDay.index}/100 — ${x.modeDay.indexLabel} • melhor lado ${x.modeDay.bestSide}\nExaustão DAY TRADE: ${x.modeDay.exMode.score}/100 — ${x.modeDay.exMode.state} • direção esticada ${x.modeDay.exMode.dir}\nÍndice SWING TRADE: ${x.modeSwing.index}/100 — ${x.modeSwing.indexLabel} • melhor lado ${x.modeSwing.bestSide}\nExaustão SWING TRADE: ${x.modeSwing.exMode.score}/100 — ${x.modeSwing.exMode.state} • direção esticada ${x.modeSwing.exMode.dir}\nRSI do momento: ${x.rsiContext.label} — ${x.rsiContext.detail}\nForça combinada do movimento: ${x.force.score}/100 — ${x.force.label}\nExaustão: ${x.z.ex.score}/100 — ${x.z.ex.state}\nSentimento técnico: ${x.sent.score}/100 — ${x.sent.label}\nSemáforo base: ${p.sema}\nSinal automático LONG: ${x.buy.buy?'COMPRA CONFIRMADA':'AGUARDAR'}\nAssimetria: LONG ${x.asymmetry.long}/100 • SHORT ${x.asymmetry.short}/100 • AGUARDAR ${x.asymmetry.wait}/100\nLeitura dominante da assimetria: ${x.asymmetry.dominantSide}\nParecer Inteligente: ${x.parecer.headline}\n\n2. PREÇO E MERCADO\nPreço atual: ${formatMaybe(x.price)}\nVariação 24h: ${pct(x.ch24)}\nMáxima 24h: ${formatMaybe(x.high24)}\nMínima 24h: ${formatMaybe(x.low24)}\nAmplitude 24h: ${pct(x.range24)}\nVolume financeiro 24h: ${x.qv.toLocaleString('pt-BR',{maximumFractionDigits:0})} USDT\nSpread: ${Number.isFinite(x.z.liq.spread)?x.z.liq.spread.toFixed(3)+'%':'n/d'}\nLiquidez: ${x.z.liq.score}/100 — ${x.z.liq.label}\nRegime: ${regime}\n\n3. RASTREADOR MULTI-TIMEFRAME\n5m (informativo Day Trade): ${trendInfo(A['5m'],adxInfo(d.sets['5m']).adx).dir} ${trendInfo(A['5m'],adxInfo(d.sets['5m']).adx).label} | RSI ${A['5m'].R.toFixed(1)} | ${A['5m'].signal}\n15m: ${x.z.trendBy['15m'].dir} ${x.z.trendBy['15m'].label} | RSI ${A['15m'].R.toFixed(1)} | ${A['15m'].signal}\n1h: ${x.z.trendBy['1h'].dir} ${x.z.trendBy['1h'].label} | RSI ${A['1h'].R.toFixed(1)} | ${A['1h'].signal}\n4h: ${x.z.trendBy['4h'].dir} ${x.z.trendBy['4h'].label} | RSI ${A['4h'].R.toFixed(1)} | ${A['4h'].signal}\n1D: ${x.z.trendBy['1d'].dir} ${x.z.trendBy['1d'].label} | RSI ${A['1d'].R.toFixed(1)} | ${A['1d'].signal}\nAlinhamento estrutural (15m+1h+4h+1D): Alta ${x.z.ups}/4 • Baixa ${x.z.downs}/4\nDireção MTF: ${x.directionLabel}
+  return `========================================\nBTC_PADRAO — RELATÓRIO INTELIGENTE V8.9.5\nData/Hora: ${new Date().toLocaleString('pt-BR')}\nFonte: ${d.source}\nAtivo: ${prettySymbol(d.symbol)}\nTimeframe principal: ${tfName(x.tf)}\n========================================\n\n0. EXAUSTÃO + FIGURAS GRÁFICAS — REVERSÃO\n${(()=>{const r=buildReversalAnalysis(d),p=r.best;return `${r.state}\nFigura principal: ${p.type==='NONE'?'Sem figura forte':p.name+' — '+reversalTfLabel(p.tf)+' — '+r.score+'/100'}\nEstágio: ${r.stage}\nConfirmação 1h: ${r.t1.dir} ${r.t1.label} — ${r.confirm1h}\nContexto 4h: ${r.t4.dir} ${r.t4.label} — ${r.context4h}\n${reversalLevelsText(r)}\n${reversalBeginnerText(r)}`;})()}\n\n1. RESUMO EXECUTIVO\nDireção/Viés: ${x.directionLabel}\nÍndice SetupDT: ${x.index}/100 — ${x.indexLabel}\nMomento: ${x.moment}\nQualidade do contexto: ${x.z.quality}/100 — ${x.z.qualityLabel}\nQualidade da entrada agora: ${x.index}/100 — ${x.indexLabel}\nÍndice DAY TRADE: ${x.modeDay.index}/100 — ${x.modeDay.indexLabel} • melhor lado ${x.modeDay.bestSide}\nExaustão DAY TRADE: ${x.modeDay.exMode.score}/100 — ${x.modeDay.exMode.state} • direção esticada ${x.modeDay.exMode.dir}\nÍndice SWING TRADE: ${x.modeSwing.index}/100 — ${x.modeSwing.indexLabel} • melhor lado ${x.modeSwing.bestSide}\nExaustão SWING TRADE: ${x.modeSwing.exMode.score}/100 — ${x.modeSwing.exMode.state} • direção esticada ${x.modeSwing.exMode.dir}\nRSI do momento: ${x.rsiContext.label} — ${x.rsiContext.detail}\nForça combinada do movimento: ${x.force.score}/100 — ${x.force.label}\nExaustão: ${x.z.ex.score}/100 — ${x.z.ex.state}\nSentimento técnico: ${x.sent.score}/100 — ${x.sent.label}\nSemáforo base: ${p.sema}\nSinal automático LONG: ${x.buy.buy?'COMPRA CONFIRMADA':'AGUARDAR'}\nAssimetria: LONG ${x.asymmetry.long}/100 • SHORT ${x.asymmetry.short}/100 • AGUARDAR ${x.asymmetry.wait}/100\nLeitura dominante da assimetria: ${x.asymmetry.dominantSide}\nParecer Inteligente: ${x.parecer.headline}\n\n2. PREÇO E MERCADO\nPreço atual: ${formatMaybe(x.price)}\nVariação 24h: ${pct(x.ch24)}\nMáxima 24h: ${formatMaybe(x.high24)}\nMínima 24h: ${formatMaybe(x.low24)}\nAmplitude 24h: ${pct(x.range24)}\nVolume financeiro 24h: ${x.qv.toLocaleString('pt-BR',{maximumFractionDigits:0})} USDT\nSpread: ${Number.isFinite(x.z.liq.spread)?x.z.liq.spread.toFixed(3)+'%':'n/d'}\nLiquidez: ${x.z.liq.score}/100 — ${x.z.liq.label}\nRegime: ${regime}\n\n3. RASTREADOR MULTI-TIMEFRAME\n5m (informativo Day Trade): ${trendInfo(A['5m'],adxInfo(d.sets['5m']).adx).dir} ${trendInfo(A['5m'],adxInfo(d.sets['5m']).adx).label} | RSI ${A['5m'].R.toFixed(1)} | ${A['5m'].signal}\n15m: ${x.z.trendBy['15m'].dir} ${x.z.trendBy['15m'].label} | RSI ${A['15m'].R.toFixed(1)} | ${A['15m'].signal}\n1h: ${x.z.trendBy['1h'].dir} ${x.z.trendBy['1h'].label} | RSI ${A['1h'].R.toFixed(1)} | ${A['1h'].signal}\n4h: ${x.z.trendBy['4h'].dir} ${x.z.trendBy['4h'].label} | RSI ${A['4h'].R.toFixed(1)} | ${A['4h'].signal}\n1D: ${x.z.trendBy['1d'].dir} ${x.z.trendBy['1d'].label} | RSI ${A['1d'].R.toFixed(1)} | ${A['1d'].signal}\nAlinhamento estrutural (15m+1h+4h+1D): Alta ${x.z.ups}/4 • Baixa ${x.z.downs}/4\nDireção MTF: ${x.directionLabel}
 
 3A. LEITURA OPERACIONAL SEPARADA — DAY TRADE x SWING
 ⚡ DAY TRADE (5m + 15m + 1h): ${x.modeDay.status}
@@ -3444,6 +3450,79 @@ SHORT: perda do suporte + MTF baixa ≥ ${x.modeActive.cfg.alignNeed}/${x.modeAc
 O aviso só toca uma vez quando o estado muda de não confirmado para confirmado.
 
 24. CONTEXTO + GATILHO — ESTRATÉGIA CONSCIENTE EGI\nModo ativo: ${x.modeActive.cfg.label}\nContexto estrutural: ${x.modeActive.ups>=x.modeActive.cfg.alignNeed?'ALTA':x.modeActive.downs>=x.modeActive.cfg.alignNeed?'BAIXA':'MISTO/LATERAL'}\nMelhor lado: ${x.modeActive.bestSide}\nGatilho LONG: ${x.modeActive.longCount}/6 • Gatilho SHORT: ${x.modeActive.shortCount}/6\nStatus: ${x.modeActive.status}\nRegra: gatilho sem contexto = sinal isolado; contexto sem gatilho = hipótese. A execução é a última etapa, depois de definir entrada, invalidação e alvo.\n\n25. CONCLUSÃO AUTOMÁTICA\nDireção/Viés: ${x.directionLabel}\nForça: ${x.force.score}/100 — ${x.force.label}\nMomento: ${x.moment}\nQualidade da entrada agora: ${x.index}/100 — ${x.indexLabel}\nQualidade do contexto: ${x.z.quality}/100 — ${x.z.qualityLabel}\nÍndice Day Trade: ${x.modeDay.index}/100 — ${x.modeDay.indexLabel} (${x.modeDay.bestSide}) • Trava: ${x.modeDay.qualityLockText}\nExaustão Day Trade: ${x.modeDay.exMode.score}/100 — ${x.modeDay.exMode.state} (${x.modeDay.exMode.dir})\nÍndice Swing Trade: ${x.modeSwing.index}/100 — ${x.modeSwing.indexLabel} (${x.modeSwing.bestSide}) • Trava: ${x.modeSwing.qualityLockText}\nExaustão Swing Trade: ${x.modeSwing.exMode.score}/100 — ${x.modeSwing.exMode.state} (${x.modeSwing.exMode.dir})\nExaustão geral: ${x.z.ex.score}/100 — ${x.z.ex.state}\nR:R ATUAL direcional: ${Number.isFinite(x.rrCurrentDirectional)?x.rrCurrentDirectional.toFixed(2)+':1':'0/15'} — ${x.rrCurrentLabel}\nR:R MODELO-BASE LONG: ${Number.isFinite(x.rrModelLong)?x.rrModelLong.toFixed(2)+':1':'n/d'} — apenas referência\nSemáforo base: ${p.sema}\nSinal automático LONG: ${x.buy.buy?'COMPRA CONFIRMADA':'AGUARDAR'}\nAssimetria final: LONG ${x.asymmetry.long}/100 • SHORT ${x.asymmetry.short}/100 • AGUARDAR ${x.asymmetry.wait}/100\nLeitura dominante: ${x.asymmetry.dominantSide}\n\nREGRA CENTRAL:\nTendência forte não significa entrada imediata. Se o movimento estiver muito esticado, com exaustão elevada ou relação risco/retorno ruim, priorizar AGUARDAR PULLBACK / NOVO GATILHO em vez de perseguir o preço.\n========================================`;
+}
+
+
+function buildSimplifiedGPTReport(d){
+  const x=buildSmartReportData(d), A=d.analysis, p=d.plan;
+  const tf15=x.z.trendBy['15m'], tf1=x.z.trendBy['1h'], tf4=x.z.trendBy['4h'];
+  const regime=x.direction==='ALTA'?'ALTA CONFIRMADA':x.direction==='BAIXA'?'BAIXA CONFIRMADA':x.directionLabel;
+  const exDay=x.modeDay?.exMode;
+  const reversal=(()=>{try{return buildReversalAnalysis(d)}catch(_){return null}})();
+  let fig='Sem figura forte';
+  if(reversal?.best && reversal.best.type!=='NONE'){
+    fig=`${reversal.best.name} • ${reversal.stage} • ${reversal.score}/100`;
+  }
+  const nextLong=x.nextTrigger?.long||'—';
+  const nextShort=x.nextTrigger?.short||'—';
+  const nextWait=x.nextTrigger?.wait||'—';
+  return `RELATÓRIO GPT SIMPLIFICADO — BTC PADRÃO V8.9.5
+Data/Hora: ${new Date().toLocaleString('pt-BR')}
+Ativo: ${prettySymbol(d.symbol)}
+
+1. CONTEXTO DO BTC
+Regime: ${regime}
+Semáforo: ${p.sema}
+Momento: ${x.moment}
+
+2. MULTI-TIMEFRAME
+15m: ${tf15.dir} ${tf15.label}
+1h: ${tf1.dir} ${tf1.label}
+4h: ${tf4.dir} ${tf4.label}
+Alinhamento: Alta ${x.z.ups}/4 • Baixa ${x.z.downs}/4
+
+3. ASSIMETRIA
+LONG: ${x.asymmetry.long}/100
+SHORT: ${x.asymmetry.short}/100
+AGUARDAR: ${x.asymmetry.wait}/100
+Dominante: ${x.asymmetry.dominantSide}
+
+4. EXAUSTÃO / REVERSÃO
+Exaustão Day Trade: ${exDay?.score ?? '—'}/100 • ${exDay?.state ?? '—'} • direção ${exDay?.dir ?? '—'}
+Exaustão geral: ${x.z.ex.score}/100 • ${x.z.ex.state}
+Figura principal: ${fig}
+
+5. PRÓXIMO GATILHO
+LONG: ${nextLong}
+SHORT: ${nextShort}
+AGUARDAR: ${nextWait}
+
+6. RESUMO PARA O PAINEL DO DIA
+Parecer: ${x.parecer.headline}
+Direção preferencial: ${x.modeDay.bestSide}
+Qualidade do contexto: ${x.z.quality}/100 • ${x.z.qualityLabel}
+Qualidade da entrada agora: ${x.index}/100 • ${x.indexLabel}
+
+REGRA: este resumo serve como CONTEXTO DO BTC. Não substitui o SetupDT da moeda escolhida e não é ordem de entrada.`;
+}
+
+function generateSimplifiedGPT(show=true){
+  if(!lastData){alert('Atualize os dados primeiro.');return '';}
+  const t=buildSimplifiedGPTReport(lastData);
+  const wrap=document.getElementById('simpleReportWrap');
+  const box=document.getElementById('simpleReport');
+  if(box)box.textContent=t;
+  if(wrap&&show)wrap.style.display='block';
+  return t;
+}
+async function copySimplifiedGPT(){
+  const t=generateSimplifiedGPT(true);
+  if(!t)return;
+  try{await navigator.clipboard.writeText(t);alert('RelGPT Simplificado copiado.');}
+  catch(e){
+    const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');ta.remove();alert('RelGPT Simplificado copiado.');
+  }
 }
 
 function generateSmartReport(d=lastData){
@@ -3478,7 +3557,7 @@ updateAll = async function(){
   try{await enrichV7Data(lastData);}catch(e){console.warn('Dados auxiliares indisponíveis:',e);}
   try{renderV7(lastData);}catch(e){console.warn('V7:',e);}
   try{renderModePanels(lastData);}catch(e){console.warn('Modos:',e);}
-  try{generateSmartReport(lastData);}catch(e){console.warn('Relatório geral:',e);}
+  try{generateSmartReport(lastData);}catch(e){console.warn('Relatório geral:',e);} try{if(document.getElementById('simpleReportWrap')?.style.display!=='none')generateSimplifiedGPT(false);}catch(e){console.warn('Relatório simplificado:',e);}
   try{handleTriggerAlerts(lastData);}catch(e){console.warn('Gatilhos:',e);}
   try{if(document.getElementById('loop5Auto')?.checked)runLoop5(false);}catch(e){console.warn('Loop 5:',e);}
 };

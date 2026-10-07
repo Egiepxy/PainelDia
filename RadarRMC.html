@@ -27,12 +27,14 @@ textarea,select,input,button{font:inherit;border-radius:11px;border:1px solid #3
 
 /* V5.1 — Rompimento Qualificado EGI */
 .rq-panel{border:2px solid #356b7f;background:linear-gradient(180deg,#0e2633,#0a1825);border-radius:16px;padding:14px;margin:12px 0}.rq-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.rq-card{background:#091824;border:1px solid #2a5264;border-radius:11px;padding:9px}.rq-card small{display:block;color:#8fc7d8;font-size:10px;margin-bottom:4px}.rq-card b{display:block;font-size:13px;line-height:1.3}.rq-decision{margin-top:10px;padding:10px 12px;border-radius:11px;border:1px solid #36586a;background:#0a1b28;font-weight:800}.rq-green{border-color:#279d73}.rq-yellow{border-color:#c79728}.rq-orange{border-color:#c36a2b}.rq-red{border-color:#bd4556}@media(max-width:700px){.rq-grid{grid-template-columns:1fr 1fr}}@media(max-width:480px){.rq-grid{grid-template-columns:1fr}}
+
+.top3-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.top3-card{background:#0a1728;border:1px solid var(--line);border-radius:13px;padding:11px}.top3-card h3{margin:0 0 7px;font-size:17px}.top3-card .tag{font-weight:900;margin:6px 0}.top3-card small{color:var(--muted)}@media(max-width:800px){.top3-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body><div class="wrap">
 <section class="hero">
   <div class="sub">EGI • MACRO + ROTAÇÃO + MANADA + VOLATILIDADE + SMC + ROMPIMENTO + SETUPDT</div>
-  <h1>🧭 Radar Confluência EGI V5.2 — AUTOMÁTICO</h1>
+  <h1>🧭 RadarRMC V1.0 — AUTOMÁTICO</h1>
   <div class="sub">Agora calcula Manada + Volatilidade diretamente da Binance, cruza a Confluência e executa o SMC do melhor candidato — sem precisar gerar e colar relatórios anteriores.</div>
   <div class="grid kpis">
     <div class="kpi"><small>Ativos cruzados</small><b id="crossCount">0</b></div>
@@ -42,7 +44,7 @@ textarea,select,input,button{font:inherit;border-radius:11px;border:1px solid #3
     <div class="kpi"><small>Estado</small><b id="state">Aguardando</b></div>
   </div>
 
-  <div class="notice ok" id="bootStatus"><b>✅ V5.2 AUTOMÁTICO:</b> fluxo único carregado. Manada + Volatilidade alimentam a Confluência; SMC define contexto; Rompimento Qualificado EGI avalia base lateral, direção e volume antes do SetupDT.</div>
+  <div class="notice ok" id="bootStatus"><b>✅ RadarRMC V1.1:</b> fluxo único carregado. Manada + Volatilidade alimentam a Confluência; SMC define contexto; Rompimento Qualificado EGI avalia base lateral, direção e volume antes do SetupDT.</div>
   <div class="actions">
     <button class="primary" id="goAreaBtn">📥 IR PARA ÁREA 1</button>
     <button class="secondary" id="goMacroBtn">🌎 IR PARA MACRO</button>
@@ -92,12 +94,12 @@ textarea,select,input,button{font:inherit;border-radius:11px;border:1px solid #3
 
 <section class="panel" id="autoPanel">
   <h2>⚡ MODO AUTOMÁTICO — Manada + Volatilidade + Confluência + SMC</h2>
-  <div class="notice ok"><b>Fluxo principal:</b> o app consulta a Binance Spot pública, calcula os dois motores internamente, cruza a Confluência e analisa automaticamente o SMC do melhor candidato. A Área 1 manual abaixo fica apenas como plano B.</div>
+  <div class="notice ok"><b>Fluxo principal:</b> o app consulta a Binance Spot pública, calcula os dois motores internamente, cruza a Confluência e analisa automaticamente o SMC dos Top 3 candidatos. A Área 1 manual abaixo fica apenas como plano B.</div>
   <div class="grid" style="grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
     <label class="muted">Universo<input id="autoUniverse" type="number" min="10" max="60" step="5" value="30" style="width:100%;margin-top:4px"></label>
     <label class="muted">Volume mín. 24h USDT<input id="autoMinVol" type="number" min="100000" step="1000000" value="5000000" style="width:100%;margin-top:4px"></label>
     <label class="muted">Timeframe<input value="15m" disabled style="width:100%;margin-top:4px"></label>
-    <label class="muted">SMC automático<select id="autoSmc" style="width:100%;margin-top:4px"><option value="1">Sim — melhor candidato</option><option value="0">Não</option></select></label>
+    <label class="muted">SMC automático<select id="autoSmc" style="width:100%;margin-top:4px"><option value="1">Sim — Top 3 candidatos</option><option value="0">Não</option></select></label>
   </div>
   <div class="actions">
     <button class="primary" id="autoRunBtn">🚀 GERAR TUDO AUTOMÁTICO</button>
@@ -106,6 +108,24 @@ textarea,select,input,button{font:inherit;border-radius:11px;border:1px solid #3
   <div id="autoStatus" class="notice">Pronto para consultar a Binance.</div>
   <div style="height:9px;background:#07111f;border:1px solid #29445f;border-radius:999px;overflow:hidden"><i id="autoBar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#39d7ef,#49e29b);transition:width .2s"></i></div>
   <div class="tiny" style="margin-top:7px">Persistência automática é salva neste navegador. A primeira leitura é 1x; leituras posteriores do mesmo ativo podem evoluir para 2x, 3x e 4x+.</div>
+  <div class="grid inputs" style="margin-top:12px">
+    <div>
+      <label class="muted">Relatório Manada — preenchido automaticamente</label>
+      <textarea id="autoManadaReport" readonly style="min-height:230px" placeholder="O relatório Manada aparecerá aqui após GERAR TUDO AUTOMÁTICO."></textarea>
+      <div class="actions"><button class="secondary" id="copyAutoManadaBtn">📋 COPIAR MANADA</button></div>
+    </div>
+    <div>
+      <label class="muted">Relatório Volatilidade — preenchido automaticamente</label>
+      <textarea id="autoVolReport" readonly style="min-height:230px" placeholder="O relatório Volatilidade aparecerá aqui após GERAR TUDO AUTOMÁTICO."></textarea>
+      <div class="actions"><button class="secondary" id="copyAutoVolBtn">📋 COPIAR VOLATILIDADE</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" id="top3Panel">
+  <h2>🥇 Top 3 — SMC + Rompimento Qualificado</h2>
+  <div class="notice">Após o modo automático, o RadarRMC analisa os três melhores candidatos e separa cada um em <b>SetupDT agora</b>, <b>Esperar</b> ou <b>Evitar agora</b>.</div>
+  <div id="top3Summary" class="top3-grid"><div class="top3-card"><b>Execute GERAR TUDO AUTOMÁTICO.</b></div></div>
 </section>
 
 <section class="panel">
@@ -334,7 +354,7 @@ textarea,select,input,button{font:inherit;border-radius:11px;border:1px solid #3
 <script>
 'use strict';
 const $=s=>document.querySelector(s), clamp=(x,a=0,b=100)=>Math.max(a,Math.min(b,x));
-let crossed=[],lastSmc=null;
+let crossed=[],lastSmc=null,top3Smc=[];
 const HISTORY_KEY='egi_confluencia_v5_history',SETUP_URL_KEY='egi_confluencia_setup_url';
 function readHistory(){try{const v=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}}
 function writeHistory(v){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(v.slice(0,30)))}catch(_){}}
@@ -344,7 +364,7 @@ function finalStateFrom(smc){if(!smc)return{state:'⚪ AGUARDANDO ANÁLISE',deta
 function updateFinalState(record=false){const el=$('#finalFlowPanel');if(!el)return;const f=finalStateFrom(lastSmc);el.className='final-flow '+f.cls;$('#finalState').textContent=f.state;$('#finalDetail').textContent=f.detail;$('#finalAsset').textContent=lastSmc?.sym||'—';$('#finalKey').textContent=lastSmc?.keyLevel||'—';$('#finalNext').textContent=f.next;if(record&&lastSmc){let h=readHistory();const item={asset:lastSmc.sym,state:f.state,key:lastSmc.keyLevel||'—',next:f.next,when:new Date().toLocaleString('pt-BR')};const prev=h[0];if(!prev||prev.asset!==item.asset||prev.state!==item.state||prev.key!==item.key)h.unshift(item);writeHistory(h);renderHistory()}return f}
 function setupPacket(){if(!lastSmc)return null;const dir=operationalDirection(lastSmc),asset=lastSmc.sym.replace(/USDT$/,'');return{asset,dir,verdict:lastSmc.operVerdict||'—',key:lastSmc.keyLevel||'—',stop:lastSmc.tlbStop||lastSmc.tsStop||'—',trigger:lastSmc.triggerStatus||'—',rq:lastSmc.rq||null,next:finalStateFrom(lastSmc).next}}
 function setupUrl(){const p=setupPacket();if(!p)return'';let base=($('#setupUrl').value||'index.html').trim()||'index.html';try{localStorage.setItem(SETUP_URL_KEY,base)}catch(_){}const sep=base.includes('?')?'&':'?';let q=`viradas=${encodeURIComponent(p.asset)}&lado=${encodeURIComponent(p.dir)}`;if(p.dir==='LONG')q+=`&long=${encodeURIComponent(p.asset)}`;else if(p.dir==='SHORT')q+=`&short=${encodeURIComponent(p.asset)}`;return base+sep+q}
-function setupPacketText(){const p=setupPacket();if(!p)return'';const rq=p.rq?`\nRompimento Qualificado EGI: ${p.rq.score}/100 • ${p.rq.decision}`:'';return`PACOTE CONFLUÊNCIA EGI V5.2 → SETUPDT\nAtivo: ${p.asset}/USDT\nDireção contextual: ${p.dir}\nVeredito: ${p.verdict}\nGatilho: ${p.trigger}${rq}\nNível-chave: ${p.key}\nStop de referência: ${p.stop}\nPróxima ação: ${p.next}\nRegra: o SetupDT faz a confirmação final 15m/1h/4h; este pacote não é ordem.`}
+function setupPacketText(){const p=setupPacket();if(!p)return'';const rq=p.rq?`\nRompimento Qualificado EGI: ${p.rq.score}/100 • ${p.rq.decision}`:'';return`PACOTE RADARRMC V1.0 → SETUPDT\nAtivo: ${p.asset}/USDT\nDireção contextual: ${p.dir}\nVeredito: ${p.verdict}\nGatilho: ${p.trigger}${rq}\nNível-chave: ${p.key}\nStop de referência: ${p.stop}\nPróxima ação: ${p.next}\nRegra: o SetupDT faz a confirmação final 15m/1h/4h; este pacote não é ordem.`}
 
 function num(v){if(v==null)return null;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:null}
 function parsePersist(t){
@@ -1034,11 +1054,11 @@ async function updateMacroCrypto(){
 function macroText(){calcMacro();return `CONTEXTO MACRO EGI\nRegime: ${macroState.regime}\nRisco macro: ${macroState.risk}\nRotação altcoins: ${macroState.rotation}${macroState.rotationScore!=null?' ('+macroState.rotationScore+'/100)':''}\nBTC: ${macroState.btc!=null?fmtPrice(macroState.btc):'não atualizado'}${macroState.btc24!=null?' • 24h aprox. '+macroState.btc24.toFixed(2)+'%':''}\nETH/BTC 24h aprox.: ${macroState.ethbtc24!=null?macroState.ethbtc24.toFixed(2)+'%':'—'}\nSOL/BTC 24h aprox.: ${macroState.solbtc24!=null?macroState.solbtc24.toFixed(2)+'%':'—'}\nTreasury 10Y: ${$('#macro10y').value}% | DXY: ${$('#macroDxy').value} | VIX: ${$('#macroVix').value}\nRegra: esta camada NÃO bloqueia SetupDT 6/6; apenas ajusta agressividade e risco.`}
 
 function buildReport(){
-  if(!crossed.length)return'';let t=`RELATÓRIO — RADAR CONFLUÊNCIA EGI V5.2 AUTOMÁTICO\nGerado em: ${new Date().toLocaleString('pt-BR')}\n\nOBJETIVO\nCruzar Radar Manada V2.3 e Radar Volatilidade V2.3 para reduzir o universo antes do Contexto SMC e da confirmação final no SetupDT. O cruzamento não define LONG/SHORT.\n\nTOP CONFLUÊNCIA\n`;
+  if(!crossed.length)return'';let t=`RELATÓRIO — RADARRMC V1.1 AUTOMÁTICO\nGerado em: ${new Date().toLocaleString('pt-BR')}\n\nOBJETIVO\nCruzar Radar Manada V2.3 e Radar Volatilidade V2.3 para reduzir o universo antes do Contexto SMC e da confirmação final no SetupDT. O cruzamento não define LONG/SHORT.\n\nTOP CONFLUÊNCIA\n`;
   crossed.slice(0,10).forEach((x,i)=>{t+=`${i+1}. ${x.symbol} | Confluência ${x.score}/100 | Manada ${x.man.manada} | Entrada ${x.man.entry} | Persistência ${x.man.persist.count}x${x.man.persist.score!=null?' score '+Math.round(x.man.persist.score):''} | Vol ${x.vol.vol} | Qual ${x.vol.quality} | Equilíbrio ${x.vol.balance} | Risco ${x.vol.danger} | ${x.decision.label} | Próxima ação ${x.decision.next}\n`});
   if(lastSmc)t+=`\nCONTEXTO SMC — ${lastSmc.sym}\n4h ${lastSmc.st4} | 1h ${lastSmc.st1} | Liquidez ${lastSmc.liq} | S/R varejista ${lastSmc.sr} | Varredura ${lastSmc.sweep} | Leitura S/R ${lastSmc.srRead} | Triângulo ${lastSmc.triType} ${lastSmc.triLegs}/5 ${lastSmc.triBias} | FVG ${lastSmc.fvg} | Quebra ${lastSmc.break} | OB ${lastSmc.ob} | Validação ${lastSmc.points}/3 | Micro ${lastSmc.micro}\nRSI 15m ${lastSmc.rsi15} | RSI 1h ${lastSmc.rsi1h} | RSI 4h ${lastSmc.rsi4h} | Score reversão ${lastSmc.rev}/100${lastSmc.revDir?' '+lastSmc.revDir:''} | Reteste ${lastSmc.retest}\nCamadas reversão: ${lastSmc.revParts||'—'}\nROMPIMENTO QUALIFICADO EGI: ${lastSmc.rq?lastSmc.rq.score+'/100 • '+lastSmc.rq.decision:'—'}\nBase: ${lastSmc.rq?.base||'—'} | Faixa: ${lastSmc.rq?.range||'—'} | Rompimento: ${lastSmc.rq?.breakout||'—'} | Volume: ${lastSmc.rq?.volume||'—'}\nDecisão: ${lastSmc.decision}\n`;
   t+=`\n\n${macroText()}\n`;
-  t+=`\nPEDIDO AO CHATGPT\nEscolha no máximo 3 candidatos para abrir no SetupDT. Dê preferência a confluência alta com entrada saudável, persistência confirmada/forte e risco de volatilidade controlado. Penalize entrada tardia, pullback pendente, volatilidade perigosa e qualidade baixa. Se houver SMC, trate-o como contexto/localização e não como ordem automática. Considere também o Rompimento Qualificado EGI: 8 candles laterais, fechamento além do limite, alinhamento 4h/1h e volume. Diga: 1) SetupDT agora; 2) esperar rompimento/volume/pullback; 3) evitar agora.`;return t;
+  t+=`\nPEDIDO AO CHATGPT\nO RadarRMC já analisou os Top 3 no SMC. Escolha no máximo 3 candidatos para abrir no SetupDT. Dê preferência a confluência alta com entrada saudável, persistência confirmada/forte e risco de volatilidade controlado. Penalize entrada tardia, pullback pendente, volatilidade perigosa e qualidade baixa. Se houver SMC, trate-o como contexto/localização e não como ordem automática. Considere também o Rompimento Qualificado EGI: 8 candles laterais, fechamento além do limite, alinhamento 4h/1h e volume. Diga: 1) SetupDT agora; 2) esperar rompimento/volume/pullback; 3) evitar agora.`;return t;
 }
 async function copyText(t){if(!t)return;try{await navigator.clipboard.writeText(t)}catch(_){const ta=document.createElement('textarea');ta.value=t;document.body.append(ta);ta.select();document.execCommand('copy');ta.remove()}}
 
@@ -1095,6 +1115,55 @@ function aCalcOne(sym,ks,ticker,book,liqRank,total,prev){
   const persist={count,score:persScore,up:persScore!=null&&persScore>=65,down:persScore!=null&&persScore<45,text:count+'x'};
   return {man:{symbol:sym,manada:Math.round(manada),entry:Math.round(entry),persist,action,rsi,space:spaceRes,dVwap:distVwap,dEma:distEma9,trend:trendUp?'ALTA':'TRANSIÇÃO'},vol:{symbol:sym,vol,quality,balance,movement,danger,spread,volRatio:vr},hist:{ts:now,count,manada,entry}};
 }
+
+function classifyTop3(smc){
+  if(!smc)return {label:'⚪ SEM LEITURA',cls:'',why:'Análise não concluída',next:'Reprocessar SMC'};
+  const v=(smc.operVerdict||'').toUpperCase();
+  const rq=smc.rq||{};
+  const trig=(smc.triggerStatus||'').toUpperCase();
+  const conflict=(smc.conflict||'').toUpperCase();
+  const dec=String(smc.decision||'').toUpperCase();
+  const rqDec=String(rq.decision||'').toUpperCase();
+  const severe=v.includes('BLOQUE')||v.includes('INVALID')||conflict.includes('FORTE')||dec.includes('INVALID');
+  const waiting=trig.includes('AGUARD')||trig.includes('NÃO CONFIRM')||v.includes('EM ESTUDO')||rqDec.includes('AGUARD')||dec.includes('AGUARD')||dec.includes('NÃO ANTECIPAR');
+  if((rq.score||0)>=70 && !severe && !rqDec.includes('AGUARD') && (trig.includes('CONFIRM')||v.includes('CONFIRM')))
+    return {label:'🟢 SETUPDT AGORA',cls:'green',why:'Contexto + gatilho + rompimento com qualidade',next:'Abrir no SetupDT para confirmação final'};
+  if(!severe && (waiting || (rq.score||0)>=25))
+    return {label:'🟡 ESPERAR',cls:'yellow',why:'Candidato segue vivo, mas falta alinhamento, rompimento, volume, reteste ou gatilho',next:'Reavaliar no próximo gatilho'};
+  if(v.includes('CONFLITO')||conflict.includes('CONFLITO')||severe)
+    return {label:'🔴 EVITAR AGORA',cls:'red',why:'Conflito estrutural forte, bloqueio ou invalidação do contexto',next:'Retirar da prioridade até nova estrutura'};
+  return {label:'🟠 EVITAR AGORA',cls:'orange',why:'Qualidade insuficiente neste momento',next:'Não priorizar'};
+}
+function renderTop3Summary(){
+  const box=$('#top3Summary'); if(!box)return;
+  if(!top3Smc.length){box.innerHTML='<div class="top3-card"><b>Sem análise Top 3 ainda.</b></div>';return}
+  box.innerHTML=top3Smc.map((s,i)=>{const c=classifyTop3(s);const rank=crossed.findIndex(x=>x.symbol===s.sym)+1;const cf=crossed.find(x=>x.symbol===s.sym);return `<div class="top3-card"><h3>${i+1}. ${s.sym.replace('USDT','')} <small>Confluência ${cf?.score??'—'}</small></h3><div class="tag ${c.cls}">${c.label}</div><small>${c.why}</small><div style="margin-top:7px">SMC: <b>${s.operVerdict||'—'}</b></div><div>RQ: <b>${s.rq?.score??'—'}/100</b></div><div>Gatilho: <b>${s.triggerStatus||'—'}</b></div><div>Próximo passo: <b>${c.next||'—'}</b></div></div>`}).join('');
+}
+async function analyzeTop3(){
+  top3Smc=[];
+  const top=crossed.slice(0,3);
+  for(let i=0;i<top.length;i++){
+    $('#autoStatus').textContent=`Analisando SMC ${i+1}/${top.length}: ${top[i].symbol.replace('USDT','')}...`;
+    $('#smcSymbol').value=top[i].symbol; $('#smcManual').value=top[i].symbol;
+    await analyzeSmc();
+    if(lastSmc) top3Smc.push(JSON.parse(JSON.stringify(lastSmc)));
+  }
+  renderTop3Summary();
+  if(top[0]){$('#smcSymbol').value=top[0].symbol;$('#smcManual').value=top[0].symbol;}
+}
+function buildAutoManadaReport(M){
+  const list=Object.values(M).sort((a,b)=>(b.manada+b.entry)-(a.manada+a.entry));
+  let t=`RELATÓRIO AUTOMÁTICO — RADAR MANADA EGI\nGerado em: ${new Date().toLocaleString('pt-BR')}\nFonte: Binance Spot pública\n\nTOP MANADA\n`;
+  list.slice(0,20).forEach((m,i)=>{t+=`${i+1}. ${m.symbol} | Manada ${m.manada}/100 | Entrada ${m.entry}/100 | Persistência ${m.persist.count}x${m.persist.score!=null?' • score '+Math.round(m.persist.score):''} | Ação ${m.action} | RSI ${m.rsi.toFixed?m.rsi.toFixed(1):m.rsi} | Tendência ${m.trend}\n`});
+  return t;
+}
+function buildAutoVolReport(V){
+  const list=Object.values(V).sort((a,b)=>(b.quality+b.balance+b.vol)-(a.quality+a.balance+a.vol));
+  let t=`RELATÓRIO AUTOMÁTICO — RADAR VOLATILIDADE EGI\nGerado em: ${new Date().toLocaleString('pt-BR')}\nFonte: Binance Spot pública\n\nTOP VOLATILIDADE / QUALIDADE\n`;
+  list.slice(0,20).forEach((v,i)=>{t+=`${i+1}. ${v.symbol} | Vol ${v.vol}/100 | Qualidade ${v.quality}/100 | Equilíbrio ${v.balance}/100 | Movimento ${v.movement}/100 | Risco ${v.danger}/100 | Spread ${Number(v.spread||0).toFixed(3)}% | VolRatio ${Number(v.volRatio||0).toFixed(2)}x\n`});
+  return t;
+}
+
 async function autoRun(){
   const btn=$('#autoRunBtn');if(btn.disabled)return;btn.disabled=true;$('#autoBar').style.width='2%';$('#autoStatus').className='notice';$('#autoStatus').textContent='Buscando universo Binance...';
   try{
@@ -1107,8 +1176,15 @@ async function autoRun(){
     async function worker(){while(true){const i=idx++;if(i>=uni.length)return;const t=uni[i];try{const [ks,book]=await Promise.all([aBinance('/api/v3/klines?symbol='+t.symbol+'&interval=15m&limit=80'),aBinance('/api/v3/ticker/bookTicker?symbol='+t.symbol).catch(()=>null)]);const z=aCalcOne(t.symbol,ks,t,book,i,uni.length,prev);M[t.symbol]=z.man;V[t.symbol]=z.vol;nextHist[t.symbol]=z.hist}catch(e){}done++;$('#autoBar').style.width=(8+72*done/uni.length)+'%';$('#autoStatus').textContent=`Calculando motores internos: ${done}/${uni.length} ativos...`}}
     await Promise.all(Array.from({length:Math.min(8,uni.length)},worker));aSaveHist(nextHist);
     crossed=[];for(const sym of Object.keys(M)){if(V[sym]){const x={symbol:sym,man:M[sym],vol:V[sym]};x.score=confluence(x.man,x.vol);x.decision=decision(x);crossed.push(x)}}crossed.sort((a,b)=>b.score-a.score);renderCross();
+    const manReport=buildAutoManadaReport(M), volReport=buildAutoVolReport(V);
+    $('#autoManadaReport').value=manReport;
+    $('#autoVolReport').value=volReport;
+    $('#area1Text').value=manReport+'\n\n'+volReport;
+    try{localStorage.setItem('egi_confluencia_area1',$('#area1Text').value)}catch(_){}
+    $('#crossStatus').className='notice ok';
+    $('#crossStatus').textContent='✅ Área 1 preenchida automaticamente com os relatórios Manada + Volatilidade desta leitura.';
     $('#autoBar').style.width='88%';$('#autoStatus').className='notice ok';$('#autoStatus').textContent=`✅ Automático concluído: ${crossed.length} ativos cruzados. Top: ${crossed.slice(0,5).map(x=>x.symbol.replace('USDT','')+' '+x.score).join(' • ')}.`;
-    if(crossed[0]){ $('#smcSymbol').value=crossed[0].symbol; $('#smcManual').value=crossed[0].symbol; if($('#autoSmc').value==='1'){ $('#autoStatus').textContent+=' Analisando SMC do líder...'; await analyzeSmc(); }}
+    if(crossed[0]){ $('#smcSymbol').value=crossed[0].symbol; $('#smcManual').value=crossed[0].symbol; if($('#autoSmc').value==='1'){ $('#autoStatus').textContent+=' Analisando SMC dos Top 3...'; await analyzeTop3(); $('#autoStatus').className='notice ok'; $('#autoStatus').textContent=`✅ RadarRMC concluído: ranking + SMC Top 3 prontos.`; }}
     $('#autoBar').style.width='100%';
   }catch(e){$('#autoStatus').className='notice warn';$('#autoStatus').textContent='Falha no automático: '+(e.message||e)+'. Use a Área 1 manual como plano B.';$('#autoBar').style.width='0%'}finally{btn.disabled=false}
 }
@@ -1118,9 +1194,12 @@ $('#macroUpdateBtn').onclick=updateMacroCrypto;$('#macroCalcBtn').onclick=calcMa
 $('#goAreaBtn').onclick=()=>$('#area1Text').scrollIntoView({behavior:'smooth',block:'center'});$('#goMacroBtn').onclick=()=>$('#macroPanel').scrollIntoView({behavior:'smooth'});$('#goSmcBtn').onclick=()=>$('#smcBtn').scrollIntoView({behavior:'smooth',block:'center'});
 $('#pasteBtn').onclick=async()=>{try{const t=await navigator.clipboard.readText();if(!t)throw Error('Área de transferência vazia');$('#area1Text').value=t;cross();$('#crossStatus').textContent+=' Texto colado com sucesso.'}catch(e){alert('O navegador bloqueou a leitura automática da área de transferência. Use Ctrl+V dentro da Área 1 ou IMPORTAR TXT.')}};
 $('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;$('#area1Text').value=await f.text();cross();};
-try{const saved=localStorage.getItem('egi_confluencia_area1');if(saved){$('#area1Text').value=saved;const r=cross();if(r.mCount&&r.vCount)$('#bootStatus').innerHTML='<b>✅ V5.2:</b> último relatório manual restaurado. O modo automático está disponível acima.'}}catch(_){}
+try{const saved=localStorage.getItem('egi_confluencia_area1');if(saved){$('#area1Text').value=saved;const r=cross();if(r.mCount&&r.vCount)$('#bootStatus').innerHTML='<b>✅ RadarRMC V1.0:</b> último relatório manual restaurado. O modo automático está disponível acima.'}}catch(_){}
 /* V5.1.1: atualização macro não é mais disparada automaticamente ao abrir. Use o botão de atualizar macro. */
-$('#smcManual').addEventListener('change',()=>{$('#smcManual').value=$('#smcManual').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'')});$('#updateAllBtn').onclick=updateAll;$('#smcBtn').onclick=analyzeSmc;$('#copyTopBtn').onclick=()=>copyText(crossed.slice(0,5).map(x=>x.symbol.replace('USDT','')).join(', '));$('#reportBtn').onclick=()=>{const t=buildReport();if(!t)return alert('Use ATUALIZAR TUDO primeiro.');$('#report').value=t;$('#reportPanel').style.display='block';$('#reportPanel').scrollIntoView({behavior:'smooth'})};$('#copyReportBtn').onclick=()=>copyText($('#report').value||buildReport());$('#copySmcBtn').onclick=()=>{if(!lastSmc)return alert('Faça a análise SMC primeiro.');copyText(`SMC EGI — ${lastSmc.sym}\nVEREDITO ${lastSmc.operVerdict||'—'}\nLEITURA ${lastSmc.operVerdictSub||'—'}\nEvidências estruturais ${lastSmc.evidence??lastSmc.rev}/100\nQualidade da reversão ${lastSmc.reversalQuality||lastSmc.revConfirm}\nGatilho operacional ${lastSmc.triggerStatus||'—'}\nNível-chave ${lastSmc.keyLevel||'—'}\nRompimento Qualificado ${lastSmc.rq?lastSmc.rq.score+'/100 • '+lastSmc.rq.decision:'—'}\nBase 8 candles ${lastSmc.rq?.base||'—'}\nFaixa ${lastSmc.rq?.range||'—'}\nVolume ${lastSmc.rq?.volume||'—'}\n\n4h ${lastSmc.st4}\n1h ${lastSmc.st1}\nLiquidez ${lastSmc.liq}\nS/R varejista ${lastSmc.sr}\nVarredura ${lastSmc.sweep}\nLeitura S/R ${lastSmc.srRead}\nTriângulo ${lastSmc.triType}\nPernadas ${lastSmc.triLegs}/5\nViés ${lastSmc.triBias}\nLeitura triângulo ${lastSmc.triRead}\nConflito estrutural ${lastSmc.conflict}\nQualidade reversão ${lastSmc.revConfirm}\nCandle ${lastSmc.candleCtx}\nVolatilidade ${lastSmc.volCtx}\nRisco/Retorno ${lastSmc.rr}\nExpectativa ${lastSmc.expect}\nThree Line Bar ${lastSmc.tlb}\nTLB Trigger ${lastSmc.tlbTrigger}\nTLB Stop ${lastSmc.tlbStop}\nTLB Modo ${lastSmc.tlbMode}\nContexto BTC ${lastSmc.btcContext}\nSentimento ${lastSmc.sentiment}\nRegime ${lastSmc.marketRegime}\nContexto EGI ${lastSmc.macroContext}\nTriple D1 ${lastSmc.tsD1}\nTriple 1h ${lastSmc.ts1h}\nTriple 5m ${lastSmc.ts5m}\nTriple Final ${lastSmc.tsFinal}\nTrigger 5m ${lastSmc.tsTrigger}\nStop 5m ${lastSmc.tsStop}\nFVG ${lastSmc.fvg}\nQuebra ${lastSmc.break}\nOB ${lastSmc.ob}\nValidação ${lastSmc.points}/3\nMicro ${lastSmc.micro}\nRSI 15m ${lastSmc.rsi15}\nRSI 1h ${lastSmc.rsi1h}\nRSI 4h ${lastSmc.rsi4h}\nEvidências estruturais ${lastSmc.rev}/100${lastSmc.revDir?' • '+lastSmc.revDir:''}\nReteste ${lastSmc.retest}\n${lastSmc.decision}`)};$('#clearBtn').onclick=()=>{$('#area1Text').value='';crossed=[];lastSmc=null;renderCross();updateFinalState(false);$('#crossStatus').className='notice';$('#crossStatus').textContent='Aguardando Manada + Volatilidade na Área 1.';try{localStorage.removeItem('egi_confluencia_area1')}catch(_){}};
+$('#smcManual').addEventListener('change',()=>{$('#smcManual').value=$('#smcManual').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'')});
+$('#copyAutoManadaBtn').onclick=()=>copyText($('#autoManadaReport').value);
+$('#copyAutoVolBtn').onclick=()=>copyText($('#autoVolReport').value);
+$('#updateAllBtn').onclick=updateAll;$('#smcBtn').onclick=analyzeSmc;$('#copyTopBtn').onclick=()=>copyText(crossed.slice(0,5).map(x=>x.symbol.replace('USDT','')).join(', '));$('#reportBtn').onclick=()=>{const t=buildReport();if(!t)return alert('Use ATUALIZAR TUDO primeiro.');$('#report').value=t;$('#reportPanel').style.display='block';$('#reportPanel').scrollIntoView({behavior:'smooth'})};$('#copyReportBtn').onclick=()=>copyText($('#report').value||buildReport());$('#copySmcBtn').onclick=()=>{if(!lastSmc)return alert('Faça a análise SMC primeiro.');copyText(`SMC EGI — ${lastSmc.sym}\nVEREDITO ${lastSmc.operVerdict||'—'}\nLEITURA ${lastSmc.operVerdictSub||'—'}\nEvidências estruturais ${lastSmc.evidence??lastSmc.rev}/100\nQualidade da reversão ${lastSmc.reversalQuality||lastSmc.revConfirm}\nGatilho operacional ${lastSmc.triggerStatus||'—'}\nNível-chave ${lastSmc.keyLevel||'—'}\nRompimento Qualificado ${lastSmc.rq?lastSmc.rq.score+'/100 • '+lastSmc.rq.decision:'—'}\nBase 8 candles ${lastSmc.rq?.base||'—'}\nFaixa ${lastSmc.rq?.range||'—'}\nVolume ${lastSmc.rq?.volume||'—'}\n\n4h ${lastSmc.st4}\n1h ${lastSmc.st1}\nLiquidez ${lastSmc.liq}\nS/R varejista ${lastSmc.sr}\nVarredura ${lastSmc.sweep}\nLeitura S/R ${lastSmc.srRead}\nTriângulo ${lastSmc.triType}\nPernadas ${lastSmc.triLegs}/5\nViés ${lastSmc.triBias}\nLeitura triângulo ${lastSmc.triRead}\nConflito estrutural ${lastSmc.conflict}\nQualidade reversão ${lastSmc.revConfirm}\nCandle ${lastSmc.candleCtx}\nVolatilidade ${lastSmc.volCtx}\nRisco/Retorno ${lastSmc.rr}\nExpectativa ${lastSmc.expect}\nThree Line Bar ${lastSmc.tlb}\nTLB Trigger ${lastSmc.tlbTrigger}\nTLB Stop ${lastSmc.tlbStop}\nTLB Modo ${lastSmc.tlbMode}\nContexto BTC ${lastSmc.btcContext}\nSentimento ${lastSmc.sentiment}\nRegime ${lastSmc.marketRegime}\nContexto EGI ${lastSmc.macroContext}\nTriple D1 ${lastSmc.tsD1}\nTriple 1h ${lastSmc.ts1h}\nTriple 5m ${lastSmc.ts5m}\nTriple Final ${lastSmc.tsFinal}\nTrigger 5m ${lastSmc.tsTrigger}\nStop 5m ${lastSmc.tsStop}\nFVG ${lastSmc.fvg}\nQuebra ${lastSmc.break}\nOB ${lastSmc.ob}\nValidação ${lastSmc.points}/3\nMicro ${lastSmc.micro}\nRSI 15m ${lastSmc.rsi15}\nRSI 1h ${lastSmc.rsi1h}\nRSI 4h ${lastSmc.rsi4h}\nEvidências estruturais ${lastSmc.rev}/100${lastSmc.revDir?' • '+lastSmc.revDir:''}\nReteste ${lastSmc.retest}\n${lastSmc.decision}`)};$('#clearBtn').onclick=()=>{$('#area1Text').value='';crossed=[];lastSmc=null;renderCross();updateFinalState(false);$('#crossStatus').className='notice';$('#crossStatus').textContent='Aguardando Manada + Volatilidade na Área 1.';try{localStorage.removeItem('egi_confluencia_area1')}catch(_){}};
 try{$('#area1Text').value=localStorage.getItem('egi_confluencia_area1')||''}catch(_){ }
 
 try{$('#setupUrl').value=localStorage.getItem(SETUP_URL_KEY)||'index.html'}catch(_){}
